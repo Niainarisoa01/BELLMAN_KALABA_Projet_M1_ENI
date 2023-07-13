@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+	<link href="css/activem.css" rel="stylesheet" type="text/css">
+	<style>
+		/* Votre CSS personnalisé */
+	</style>
+</head>
+<body>
+<div id="myDIV">
+	<header>
+		<div id="mDIV">
+			<b>BELLMAN-KALABA</b>
+			<button class="btn" onclick="changeColor(this)"><a href="MinBellman.html">Minimisation</a></button>
+			<button class="btn" onclick="changeColor(this)"><a href="ExempleMin.html">Exemple min</a></button>
+			<button class="btn" onclick="changeColor(this)"><a href="MaxBellman.html">Maximisation</a></button>
+			<button class="btn" onclick="changeColor(this)"><a href="ExempleMax.html">Exemple max</a></button>
+		</div>
+	</header>
+	<div id="meDIV">
+		<center>
+			<button id="item" class="fonty active">Ajouter un sommet</button><br>
+			<button id="drag" class="fonty">Positionner un sommet</button><br>
+			<button id="update" class="fonty">Mettre à jour</button><br>
+			<button id="delete" class="fonty">Supprimer</button><br>
+			<button id="debut" class="fonty">Choisir Debut</button><br>
+			<button id="fin" class="fonty">Choisir Fin</button><br>
+			<button id="chercher" class="fonty">Chercher</button><br>
+		</center>
+	</div>
+	<canvas id="canvas" width="1100px" height="560px" class="canvas"></canvas>
+	<div id="notification"></div>
+</div>
+
+<script type="text/javascript" src="js/link2.js"></script>
+<script type="text/javascript" src="js/llp.js"></script>
+<script type="text/javascript" src="js/link1.js"></script>
+<script type="text/javascript" src="js/teth.js"></script>
+<script type="text/javascript" src="js/ora.js"></script>
+<script type="text/javascript" src="js/pointSomm.js"></script>
+<script type="text/javascript" src="js/managerLink.js"></script>
+<script type="text/javascript" src="js/maxexpl.js"></script>
+<script type="text/javascript" src="js/btnbasm.js"></script>
+<script type="text/javascript" src="js/decmaxe.js"></script>
+
+<script>
+	function changeColor(button) {
+		var colors = ['#22303c', '#22303c', '#22303c', '#22303c', '#22303c', '#22303c'];
+		var currentIndex = colors.indexOf(button.style.backgroundColor);
+		var newIndex = (currentIndex + 1) % colors.length;
+		button.style.backgroundColor = colors[newIndex];
+	}
+</script>
+</body>
+</html>

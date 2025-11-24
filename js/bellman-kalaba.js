@@ -79,14 +79,18 @@ BellmanKalabaAlgorithm.prototype = {
     },
 
     setDebut: function (index) {
-        this.debut = this.getSommetByIndex(index.index);
-        this.resetColor();
+        if (index != null) {
+            this.debut = this.getSommetByIndex(index.index);
+            this.resetColor();
+        }
         return this.debut;
     },
 
     setFin: function (index) {
-        this.fin = this.getSommetByIndex(index.index);
-        this.resetColor();
+        if (index != null) {
+            this.fin = this.getSommetByIndex(index.index);
+            this.resetColor();
+        }
         return this.fin;
     },
 

@@ -6,94 +6,61 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bellman-Kalaba - Accueil</title>
-    <link rel="stylesheet" href="css/active.css">
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
-    <style>
-        .hero-unit {
-            background-color: #f5f5f5;
-            border-radius: 6px;
-            padding: 60px;
-            margin-bottom: 30px;
-            text-align: center;
-            border: 1px solid #e3e3e3;
-        }
-
-        .feature-card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .feature-card:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .feature-card h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .feature-card p {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .btn-custom {
-            margin: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body>
 
-    <div class="container">
-        <div class="hero-unit">
-            <h1>Projet Bellman-Kalaba</h1>
-            <p class="lead">Visualisation interactive de l'algorithme de Bellman-Kalaba pour la recherche de chemins
-                optimaux dans un graphe.</p>
-            <p>Projet M1 ENI - 2025</p>
-        </div>
-
-        <div class="row">
-            <div class="span4">
-                <div class="feature-card">
-                    <h3>Minimisation</h3>
-                    <p>Recherche du chemin de coût minimal (plus court chemin).</p>
-                    <a href="MinBellman.html" class="btn btn-primary btn-large btn-custom">Mode Interactif</a>
-                    <a href="ExempleMin.html" class="btn btn-info btn-large btn-custom">Exemple</a>
-                </div>
-            </div>
-
-            <div class="span4">
-                <div class="feature-card">
-                    <h3>Maximisation</h3>
-                    <p>Recherche du chemin de coût maximal (plus long chemin).</p>
-                    <a href="MaxBellman.html" class="btn btn-primary btn-large btn-custom">Mode Interactif</a>
-                    <a href="ExempleMax.html" class="btn btn-info btn-large btn-custom">Exemple</a>
-                </div>
-            </div>
-
-            <div class="span4">
-                <div class="feature-card">
-                    <h3>Cas Spéciaux</h3>
-                    <p>Exemples avancés et cas particuliers de l'algorithme.</p>
-                    <a href="ExempleCheminsMultiples.html"
-                        class="btn btn-warning btn-large btn-custom">Multi-Chemins</a>
-                </div>
+    <header>
+        <div id="mDIV">
+            <div class="brand-title">BELLMAN-KALABA</div>
+            <div class="nav-buttons">
+                <a href="MinBellman.html" class="btn">Minimisation</a>
+                <a href="ExempleMin.html" class="btn">Exemple min</a>
+                <a href="MaxBellman.html" class="btn">Maximisation</a>
+                <a href="ExempleMax.html" class="btn">Exemple max</a>
+                <a href="ExempleCheminsMultiples.html" class="btn">Multi-Chemins</a>
             </div>
         </div>
+    </header>
 
-        <footer style="margin-top: 50px; text-align: center; color: #999;">
-            <p>&copy; 2025 - Projet Bellman-Kalaba</p>
-        </footer>
+    <div class="hero-section">
+        <h1>Projet Bellman-Kalaba</h1>
+        <p>Visualisation interactive de l'algorithme de Bellman-Kalaba pour la recherche de chemins optimaux dans un
+            graphe. Projet M1 ENI - 2025</p>
     </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <h3>Minimisation</h3>
+            <p>Recherche du chemin de coût minimal (plus court chemin) dans un graphe valué.</p>
+            <div class="feature-actions">
+                <a href="MinBellman.html" class="btn">Mode Interactif</a>
+                <a href="ExempleMin.html" class="btn" style="background-color: #16a085;">Exemple</a>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <h3>Maximisation</h3>
+            <p>Recherche du chemin de coût maximal (plus long chemin) dans un graphe valué.</p>
+            <div class="feature-actions">
+                <a href="MaxBellman.html" class="btn">Mode Interactif</a>
+                <a href="ExempleMax.html" class="btn" style="background-color: #16a085;">Exemple</a>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <h3>Cas Spéciaux</h3>
+            <p>Exploration de cas particuliers comme les chemins critiques multiples de même valeur.</p>
+            <div class="feature-actions">
+                <a href="ExempleCheminsMultiples.html" class="btn" style="background-color: #e67e22;">Multi-Chemins</a>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 2rem; color: #95a5a6; margin-top: auto;">
+        <p>&copy; 2025 - Projet Bellman-Kalaba</p>
+    </footer>
 
 </body>
 

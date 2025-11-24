@@ -70,9 +70,10 @@ function initializeBellmanApp(config) {
 
     // Mouse position helper
     function getMousePosition(element, event) {
+        var rect = element.getBoundingClientRect();
         return {
-            x: event.clientX - element.offsetLeft,
-            y: event.clientY - element.offsetTop
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
         };
     }
 

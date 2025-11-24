@@ -16,7 +16,9 @@ Application web interactive pour la visualisation et la résolution de problème
 ## Installation et Utilisation
 
 1.  Clonez ce dépôt ou téléchargez les fichiers.
-2.  Ouvrez le fichier `index.html` dans un navigateur web moderne.
+2.  **Important** : Pour lancer l'application, double-cliquez sur le fichier `start_server.bat`.
+    *   Cela est nécessaire pour éviter les erreurs de sécurité liées aux modules ES6 (CORS) lors de l'exécution locale.
+3.  Le navigateur s'ouvrira automatiquement (ou rendez-vous sur `http://localhost:8000`).
 3.  Utilisez l'interface pour :
     *   **Ajouter un sommet** : Cliquez sur le bouton "Ajouter un sommet" puis sur la zone de dessin.
     *   **Ajouter un lien** : Cliquez sur "Ajouter un lien", puis sélectionnez le sommet de départ et le sommet d'arrivée. Entrez le coût du lien.

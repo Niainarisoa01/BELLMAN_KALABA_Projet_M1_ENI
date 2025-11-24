@@ -10,6 +10,25 @@ function initializeBellmanApp(config) {
     });
 
     var canvas = document.getElementById("canvas");
+    var container = document.getElementById("canvasContainer");
+
+    // Resize canvas to fit container
+    function resizeCanvas() {
+        if (container) {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            if (typeof gs !== 'undefined') {
+                gs.paint();
+            }
+        }
+    }
+
+    // Initial resize
+    resizeCanvas();
+
+    // Resize on window change
+    window.addEventListener('resize', resizeCanvas);
+
     var gs = new Scene(canvas);
 
     // Load example graph if provided

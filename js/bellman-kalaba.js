@@ -102,32 +102,35 @@ BellmanKalabaAlgorithm.prototype = {
             lien.isOptimal = false;
         }
 
-        if (this.debut != null && this.fin != null) {
-            this.fin.coutTotal = 0;
-            this.ajouterTrace(this.fin, 0);
-            var l = [this.fin];
-            this.traiter(l);
-            this.colorResult();
-
-            var ts = this;
-            setTimeout(function () {
-                // Display optimal path notification
-                var cheminOptimal = ts.getCheminMinimal();
-                var notification = "Chemin " + ts.cheminType + " : ";
-                for (var i = cheminOptimal.length - 1; i >= 0; i--) {
-                    notification += cheminOptimal[i].index;
-                    if (i > 0) {
-                        notification += " -> ";
-                    }
-                }
-                notification += " (Coût total : " + ts.debut.coutTotal + ")";
-                alert(notification);
-            }, this.animationDelay * this.traces.length);
-
-            return true;
-        } else {
+        // Validation des entrées
+        if (this.debut == null || this.fin == null) {
+            alert("Veuillez sélectionner un sommet de début et un sommet de fin");
             return false;
         }
+
+        // Initialiser le sommet de fin (backward DP)
+        this.fin.coutTotal = 0;
+        this.ajouterTrace(this.fin, 0);
+        var l = [this.fin];
+        this.traiter(l);
+        this.colorResult();
+
+        var ts = this;
+        setTimeout(function () {
+            // Display optimal path notification
+            var cheminOptimal = ts.getCheminMinimal();
+            var notification = "Chemin " + ts.cheminType + " : ";
+            for (var i = cheminOptimal.length - 1; i >= 0; i--) {
+                notification += cheminOptimal[i].index;
+                if (i > 0) {
+                    notification += " -> ";
+                }
+            }
+            notification += " (Coût total : " + ts.debut.coutTotal + ")";
+            alert(notification);
+        }, this.animationDelay * this.traces.length);
+
+        return true;
     },
 
     traiter: function (l_aTraiter) {
@@ -141,8 +144,15 @@ BellmanKalabaAlgorithm.prototype = {
                     if (!this.getInfiniteLoop(e, lien.precedent)) {
                         var precedent = lien.precedent;
                         var aTraiter = e;
-                        if (eval((aTraiter.coutTotal + lien.cout) + this.compare + precedent.coutTotal)) {
-                            precedent.coutTotal = aTraiter.coutTotal + lien.cout;
+                        var nouveauCout = aTraiter.coutTotal + lien.cout;
+
+                        // Comparaison explicite selon minimisation ou maximisation
+                        var amelioration = this.isMin
+                            ? nouveauCout < precedent.coutTotal
+                            : nouveauCout > precedent.coutTotal;
+
+                        if (amelioration) {
+                            precedent.coutTotal = nouveauCout;
                             precedent.suivant = aTraiter;
                             this.ajouterTrace(precedent, precedent.coutTotal, lien);
                             if (precedent != this.debut)
@@ -195,7 +205,7 @@ BellmanKalabaAlgorithm.prototype = {
     setIsMin: function (isMin) {
         this.isMin = isMin;
         this.infinity = isMin ? Infinity : -Infinity;
-        this.compare = isMin ? ">" : "<";
+        this.compare = isMin ? "<" : ">";  // CORRIGÉ: < pour min, > pour max
         this.cheminType = isMin ? "minimal" : "maximal";
     },
 

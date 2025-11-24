@@ -1,11 +1,12 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
-<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
-<link href="css/activem.css" rel="stylesheet" type="text/css">
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+	<link href="css/active.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
 
 	<div id="myDIV">
@@ -28,27 +29,37 @@
 				<button id="fin" class="fonty">Choisir Fin</button><br>
 				<button id="chercher" class="fonty">Chercher</button><br>
 			</center>
-  		</div>
-	  <canvas id="canvas" width="1100px" height="560px" class="canvas"></canvas>
+		</div>
+		<canvas id="canvas" width="1100px" height="560px" class="canvas"></canvas>
 	</div>
-  </body>
-</html>
-  	<script type="text/javascript" src="js/link2.js"></script>
-    <script type="text/javascript" src="js/llp.js"></script>
+
+	<script type="text/javascript" src="js/link2.js"></script>
+	<script type="text/javascript" src="js/llp.js"></script>
 	<script type="text/javascript" src="js/link1.js"></script>
 	<script type="text/javascript" src="js/teth.js"></script>
 	<script type="text/javascript" src="js/ora.js"></script>
 	<script type="text/javascript" src="js/pointSomm.js"></script>
 	<script type="text/javascript" src="js/managerLink.js"></script>
-    <script type="text/javascript" src="js/maxexpl.js"></script>
-    <script type="text/javascript" src="js/btnbasm.js"></script>
-	<script type="text/javascript" src="js/decmax.js"></script>
+	<script type="text/javascript" src="js/btnbasm.js"></script>
+	<script type="text/javascript" src="js/bellman-kalaba.js"></script>
+	<script type="text/javascript" src="js/app-initializer.js"></script>
 
-<script>
-	function changeColor(button) {
-		var colors = ['#22303c', '#22303c', '#22303c', '#22303c', '#22303c', '#22303c'];
-		var currentIndex = colors.indexOf(button.style.backgroundColor);
-		var newIndex = (currentIndex + 1) % colors.length;
-		button.style.backgroundColor = colors[newIndex];
-	}
-</script>
+	<script>
+		window.onload = function () {
+			initializeBellmanApp({
+				isMin: false,
+				buttonIds: {
+					item: "item",
+					drag: "drag",
+					update: "update",
+					delete: "delete",
+					debut: "debut",
+					fin: "fin",
+					chercher: "chercher"
+				}
+			});
+		};
+	</script>
+</body>
+
+</html>

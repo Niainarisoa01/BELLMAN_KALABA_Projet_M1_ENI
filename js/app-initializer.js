@@ -1,0 +1,113 @@
+// Application Initializer - Common initialization logic for Bellman-Kalaba app
+
+function initializeBellmanApp(config) {
+    config = config || {};
+
+    // Create algorithm instance
+    var liens = new BellmanKalabaAlgorithm({
+        isMin: config.isMin !== undefined ? config.isMin : true,
+        animationDelay: config.animationDelay || 500
+    });
+
+    var canvas = document.getElementById("canvas");
+    var gs = new Scene(canvas);
+
+    // Load example graph if provided
+    if (config.loadExample) {
+        var vertices = loadExampleGraph(liens, gs);
+    }
+
+    // Add existing links to scene
+    for (var lien of liens.liens)
+        gs.addItem(lien);
+
+    gs.paint();
+
+    var viewManager = new ViewManager(gs, liens);
+
+    // Button configuration
+    var buttonIds = config.buttonIds || {
+        item: "btn1",
+        drag: "btn2",
+        update: "btn3",
+        delete: "btn4",
+        debut: "btn5",
+        fin: "btn6",
+        chercher: "btn7"
+    };
+
+    // Get button elements
+    var itemButton = document.getElementById(buttonIds.item);
+    var dragButton = document.getElementById(buttonIds.drag);
+    var updateButton = document.getElementById(buttonIds.update);
+    var deleteButton = document.getElementById(buttonIds.delete);
+    var debutButton = document.getElementById(buttonIds.debut);
+    var finButton = document.getElementById(buttonIds.fin);
+    var chercherBouton = document.getElementById(buttonIds.chercher);
+
+    // Mouse position helper
+    function getMousePosition(element, event) {
+        return {
+            x: event.clientX - element.offsetLeft,
+            y: event.clientY - element.offsetTop
+        };
+    }
+
+    // Canvas event listeners
+    canvas.addEventListener('mousedown', function (event) {
+        viewManager.onMouseDown(getMousePosition(canvas, event));
+    });
+
+    canvas.addEventListener('mousemove', function (event) {
+        viewManager.onMouseMove(getMousePosition(canvas, event));
+    });
+
+    canvas.addEventListener('mouseup', function (event) {
+        viewManager.onMouseUp(getMousePosition(canvas, event));
+    });
+
+    canvas.addEventListener('click', function (event) {
+        viewManager.onClick(getMousePosition(canvas, event));
+    });
+
+    canvas.addEventListener('dblclick', function (event) {
+        viewManager.onDblClick(getMousePosition(canvas, event));
+    });
+
+    // Button event listeners
+    chercherBouton.addEventListener('click', function (event) {
+        liens.setIsMin(config.isMin);
+        liens.setView(viewManager);
+        liens.main();
+    });
+
+    dragButton.addEventListener('click', function (event) {
+        viewManager.mode = "drag";
+    });
+
+    itemButton.addEventListener('click', function (event) {
+        viewManager.mode = "item";
+    });
+
+    updateButton.addEventListener('click', function (event) {
+        viewManager.mode = "update";
+    });
+
+    deleteButton.addEventListener('click', function (event) {
+        viewManager.mode = "delete";
+    });
+
+    debutButton.addEventListener('click', function (event) {
+        viewManager.mode = "debut";
+    });
+
+    finButton.addEventListener('click', function (event) {
+        viewManager.mode = "fin";
+    });
+
+    return {
+        liens: liens,
+        scene: gs,
+        viewManager: viewManager
+    };
+}

@@ -151,14 +151,25 @@ BellmanKalabaAlgorithm.prototype = {
                             ? nouveauCout < precedent.coutTotal
                             : nouveauCout > precedent.coutTotal;
 
+                        var egalite = (nouveauCout === precedent.coutTotal) && (precedent.coutTotal !== this.infinity);
+
                         if (amelioration) {
                             precedent.coutTotal = nouveauCout;
-                            precedent.suivant = aTraiter;
+                            precedent.suivants = [aTraiter]; // Nouveau meilleur chemin
+                            precedent.suivant = aTraiter;    // Rétro-compatibilité
                             this.ajouterTrace(precedent, precedent.coutTotal, lien);
                             if (precedent != this.debut)
                                 l.push(precedent);
                             else
                                 this.solution = true;
+                        } else if (egalite) {
+                            // Chemin alternatif de même coût
+                            if (!precedent.suivants) precedent.suivants = [];
+                            // Éviter les doublons
+                            var exists = precedent.suivants.some(function (s) { return s.index === aTraiter.index; });
+                            if (!exists) {
+                                precedent.suivants.push(aTraiter);
+                            }
                         }
                     } else {
                         this.infinite = true;
@@ -260,7 +271,7 @@ BellmanKalabaAlgorithm.prototype = {
     },
 
     animationColor: function (s) {
-        if (s != null && s.suivant != null) {
+        if (s != null) {
             // Colorer le sommet en jaune
             s.color = {
                 r: 255,
@@ -268,27 +279,34 @@ BellmanKalabaAlgorithm.prototype = {
                 b: 1
             };
 
-            // Trouver et marquer l'arête vers le sommet suivant
-            var liensVersSuivant = this.getSuivants(s);
-            for (var lien of liensVersSuivant) {
-                if (lien.suivant === s.suivant) {
-                    lien.isOptimal = true;
-                    break;
+            // Gérer les successeurs (chemins multiples)
+            var successors = s.suivants || (s.suivant ? [s.suivant] : []);
+
+            if (successors.length > 0) {
+                var liensVersSuivant = this.getSuivants(s);
+
+                // Pour chaque successeur (branche du chemin optimal)
+                for (var i = 0; i < successors.length; i++) {
+                    var nextNode = successors[i];
+
+                    // Marquer l'arête correspondante
+                    for (var lien of liensVersSuivant) {
+                        if (lien.suivant === nextNode) {
+                            lien.isOptimal = true;
+                            break;
+                        }
+                    }
+
+                    // Continuer l'animation récursivement
+                    // Utiliser une closure pour capturer nextNode
+                    (function (ts, node) {
+                        setTimeout(function () {
+                            ts.animationColor(node);
+                        }, ts.animationDelay);
+                    })(this, nextNode);
                 }
             }
 
-            this.view.refresh();
-            var ts = this;
-            setTimeout(() => {
-                ts.animationColor(s.suivant);
-            }, this.animationDelay);
-        } else if (s != null) {
-            // Dernier sommet
-            s.color = {
-                r: 255,
-                g: 170,
-                b: 1
-            };
             this.view.refresh();
         }
     },

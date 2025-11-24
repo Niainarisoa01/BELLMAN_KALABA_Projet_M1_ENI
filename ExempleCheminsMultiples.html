@@ -6,39 +6,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bellman-Kalaba - Exemple Chemins Multiples</title>
-    <link rel="stylesheet" href="css/active.css">
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body>
 
-    <div id="myDIV">
-        <header>
-            <div id="mDIV">
-                <b>BELLMAN-KALABA</b>
-                <button class="btn"><a href="MinBellman.html">Minimisation</a></button>
-                <button class="btn"><a href="ExempleMin.html">Exemple min</a></button>
-                <button class="btn"><a href="MaxBellman.html">Maximisation</a></button>
-                <button class="btn"><a href="ExempleMax.html">Exemple max</a></button>
-                <button class="btn active"><a href="ExempleCheminsMultiples.html">Multi-Chemins</a></button>
+    <header>
+        <div id="mDIV">
+            <a href="index.html" class="brand-title">BELLMAN-KALABA</a>
+            <div class="nav-buttons">
+                <a href="MinBellman.html" class="btn">Minimisation</a>
+                <a href="ExempleMin.html" class="btn">Exemple min</a>
+                <a href="MaxBellman.html" class="btn">Maximisation</a>
+                <a href="ExempleMax.html" class="btn">Exemple max</a>
+                <a href="ExempleCheminsMultiples.html" class="btn active">Multi-Chemins</a>
             </div>
-        </header>
-        <div id="meDIV">
-            <center>
-                <h3>Exemple : Plusieurs chemins critiques de même valeur</h3>
-                <button id="btn1" class="fonty active">Ajouter un sommet</button><br>
-                <button id="btn2" class="fonty">Positionner un sommet</button><br>
-                <button id="btn3" class="fonty">Mettre à jour</button><br>
-                <button id="btn4" class="fonty">Supprimer</button><br>
-                <button id="btn5" class="fonty">Choisir Debut</button><br>
-                <button id="btn6" class="fonty">Choisir Fin</button><br>
-                <button id="btn7" class="fonty">Chercher</button><br>
-            </center>
         </div>
-        <canvas id="canvas" width="1100px" height="560px" class="canvas"></canvas>
+    </header>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <h3>Contrôles</h3>
+            <button id="btn1" class="btn active">Ajouter un sommet</button>
+            <button id="btn2" class="btn">Positionner un sommet</button>
+            <button id="btn3" class="btn">Mettre à jour</button>
+            <button id="btn4" class="btn">Supprimer</button>
+            <button id="btn5" class="btn">Choisir Debut</button>
+            <button id="btn6" class="btn">Choisir Fin</button>
+            <button id="btn7" class="btn" style="background-color: #e67e22; margin-top: auto;">Chercher</button>
+        </div>
+
+        <div class="canvas-container" id="canvasContainer">
+            <canvas id="canvas"></canvas>
+        </div>
     </div>
-    <br>
 
     <script type="text/javascript" src="js/llp.js"></script>
     <script type="text/javascript" src="js/teth.js"></script>

@@ -96,6 +96,12 @@ BellmanKalabaAlgorithm.prototype = {
 
     main: function () {
         this.initialiserCoutsTotaux();
+
+        // Réinitialiser les marqueurs de chemin optimal
+        for (var lien of this.liens) {
+            lien.isOptimal = false;
+        }
+
         if (this.debut != null && this.fin != null) {
             this.fin.coutTotal = 0;
             this.ajouterTrace(this.fin, 0);
@@ -244,17 +250,36 @@ BellmanKalabaAlgorithm.prototype = {
     },
 
     animationColor: function (s) {
-        if (s != null) {
+        if (s != null && s.suivant != null) {
+            // Colorer le sommet en jaune
+            s.color = {
+                r: 255,
+                g: 170,
+                b: 1
+            };
+
+            // Trouver et marquer l'arête vers le sommet suivant
+            var liensVersSuivant = this.getSuivants(s);
+            for (var lien of liensVersSuivant) {
+                if (lien.suivant === s.suivant) {
+                    lien.isOptimal = true;
+                    break;
+                }
+            }
+
+            this.view.refresh();
+            var ts = this;
+            setTimeout(() => {
+                ts.animationColor(s.suivant);
+            }, this.animationDelay);
+        } else if (s != null) {
+            // Dernier sommet
             s.color = {
                 r: 255,
                 g: 170,
                 b: 1
             };
             this.view.refresh();
-            var ts = this;
-            setTimeout(() => {
-                ts.animationColor(s.suivant);
-            }, this.animationDelay);
         }
     },
 

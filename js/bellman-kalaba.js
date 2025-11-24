@@ -110,30 +110,6 @@ BellmanKalabaAlgorithm.prototype = {
 
         // Initialiser le sommet de fin (backward DP)
         this.fin.coutTotal = 0;
-        this.ajouterTrace(this.fin, 0);
-        var l = [this.fin];
-        this.traiter(l);
-        this.colorResult();
-
-        var ts = this;
-        setTimeout(function () {
-            // Display optimal path notification
-            var cheminOptimal = ts.getCheminMinimal();
-            var notification = "Chemin " + ts.cheminType + " : ";
-            for (var i = cheminOptimal.length - 1; i >= 0; i--) {
-                notification += cheminOptimal[i].index;
-                if (i > 0) {
-                    notification += " -> ";
-                }
-            }
-            notification += " (Coût total : " + ts.debut.coutTotal + ")";
-            alert(notification);
-        }, this.animationDelay * this.traces.length);
-
-        return true;
-    },
-
-    traiter: function (l_aTraiter) {
         var _l = l_aTraiter;
         var l = [];
         var trouve = false;

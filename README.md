@@ -1,31 +1,40 @@
-# Mon Projet
+# Projet Bellman-Kalaba
 
-Ce projet contient une page HTML avec du JavaScript pour la minimisation et la maximisation.
+Application web interactive pour la visualisation et la résolution de problèmes de chemin optimal dans un graphe valué, utilisant l'algorithme de Bellman-Kalaba. Ce projet a été réalisé dans le cadre du Master 1 à l'ENI (École Nationale d'Informatique).
 
-## Installation
+## Fonctionnalités
 
-1. Clonez ce dépôt sur votre machine.
-2. Ouvrez le fichier `index.html` dans votre navigateur.
+*   **Minimisation** : Recherche du plus court chemin entre deux sommets.
+*   **Maximisation** : Recherche du plus long chemin (chemin critique) entre deux sommets.
+*   **Visualisation Interactive** :
+    *   Création dynamique de sommets et de liens.
+    *   Positionnement des sommets par glisser-déposer.
+    *   Animation de l'algorithme étape par étape.
+    *   Mise en évidence du chemin optimal.
+*   **Cas Spéciaux** : Gestion et visualisation des chemins multiples de même coût.
 
-## Utilisation
+## Installation et Utilisation
 
-- Cliquez sur les différents boutons pour ajouter, positionner, mettre à jour ou supprimer des sommets.
-- Sélectionnez un sommet de départ en cliquant sur "Choisir Début".
-- Sélectionnez un sommet de fin en cliquant sur "Choisir Fin".
-- Cliquez sur "Chercher" pour trouver le chemin minimal ou maximal.
+1.  Clonez ce dépôt ou téléchargez les fichiers.
+2.  Ouvrez le fichier `index.html` dans un navigateur web moderne.
+3.  Utilisez l'interface pour :
+    *   **Ajouter un sommet** : Cliquez sur le bouton "Ajouter un sommet" puis sur la zone de dessin.
+    *   **Ajouter un lien** : Cliquez sur "Ajouter un lien", puis sélectionnez le sommet de départ et le sommet d'arrivée. Entrez le coût du lien.
+    *   **Choisir Début/Fin** : Sélectionnez les sommets de départ et d'arrivée pour l'algorithme.
+    *   **Chercher** : Lancez l'algorithme pour voir le résultat animé.
 
-## Exemples
+## Structure du Projet
 
-- Consultez les exemples de minimisation et de maximisation dans les liens suivants :
-  - [Minimisation](MinBellman.html)
-  - [Exemple Min](ExempleMin.html)
-  - [Maximisation](MaxBellman.html)
-  - [Exemple Max](ExempleMax.html)
+*   `src/` : Contient le code source JavaScript de l'application (Logique, Vue, Contrôleurs).
+*   `css/` : Feuilles de style pour l'interface utilisateur.
+*   `*.html` : Pages de l'application (Accueil, Minimisation, Maximisation, Exemples).
 
 ## Auteur
 
-John Doe
+**Niaina Nomenjanahary**
+*   Année : 2025
+*   Projet M1 ENI
 
-## Licence
+## Copyright
 
-Ce projet est sous licence MIT. Veuillez consulter le fichier [LICENSE](LICENSE) pour plus d'informations.
+© 2025 Niaina Nomenjanahary. Tous droits réservés.

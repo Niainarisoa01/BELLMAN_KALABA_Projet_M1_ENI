@@ -42,6 +42,14 @@ export class Scene {
 
             this.painter.restore();
         }
+
+        // Draw copyright
+        this.painter.save();
+        this.painter.font = "12px Arial";
+        this.painter.fillStyle = "rgba(100, 100, 100, 0.5)";
+        this.painter.textAlign = "right";
+        this.painter.fillText("© 2025 Niaina Nomenjanahary", this.width() - 10, this.height() - 10);
+        this.painter.restore();
     }
 
     clear() {

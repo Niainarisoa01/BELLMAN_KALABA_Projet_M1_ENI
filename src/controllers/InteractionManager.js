@@ -102,6 +102,7 @@ export class ViewManager {
     }
 
     onMouseUp(position) {
+        console.log("onMouseUp", position, this.mode);
         switch (this.mode) {
             case "drag":
                 this.currentObject = null;
@@ -122,8 +123,11 @@ export class ViewManager {
             case "item":
                 // Create node on click (if not on existing node)
                 var item = this.getSommet(position);
+                console.log("item found at position:", item);
                 if (item == null) {
+                    console.log("Adding new sommet");
                     var sommet = this.moteur.ajouterSommet();
+                    console.log("New sommet created:", sommet);
                     sommet.position = {
                         x: position.x,
                         y: position.y

@@ -49,6 +49,16 @@ export function initializeBellmanApp(config) {
     for (var lien of liens.liens)
         gs.addItem(lien);
 
+    // Initial resize and paint
+    resizeCanvas();
+
+    // Force resize after a short delay to ensure layout is computed
+    setTimeout(function () {
+        resizeCanvas();
+        liens.centerGraph(canvas.width, canvas.height);
+        gs.paint();
+    }, 100);
+
     gs.paint();
 
     var viewManager = new ViewManager(gs, liens);

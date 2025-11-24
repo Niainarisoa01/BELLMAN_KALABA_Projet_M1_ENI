@@ -14,7 +14,11 @@ function initializeBellmanApp(config) {
 
     // Load example graph if provided
     if (config.loadExample) {
-        var vertices = loadExampleGraph(liens, gs);
+        if (config.exampleType === 'multi') {
+            loadMultiPathGraph(liens, gs);
+        } else {
+            loadExampleGraph(liens, gs);
+        }
     }
 
     // Add existing links to scene

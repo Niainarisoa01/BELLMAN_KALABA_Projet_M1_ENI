@@ -57,3 +57,50 @@ function loadExampleGraph(liens, scene) {
 
     return vertices;
 }
+
+function loadMultiPathGraph(liens, scene) {
+    // Create 6 vertices
+    var vertices = [];
+    for (var i = 0; i < 6; i++) {
+        vertices.push(liens.ajouterSommet());
+    }
+
+    // Define edges: [from_index, to_index, cost]
+    // Start: 1 (index 0), End: 6 (index 5)
+    // Path 1: 1 -> 2 -> 3 -> 6 (Cost: 5 + 5 + 5 = 15)
+    // Path 2: 1 -> 4 -> 5 -> 6 (Cost: 5 + 5 + 5 = 15)
+    var edges = [
+        [0, 1, 5], [1, 2, 5], [2, 5, 5], // Top path
+        [0, 3, 5], [3, 4, 5], [4, 5, 5], // Bottom path
+        [1, 4, 8], [3, 2, 8]             // Cross links
+    ];
+
+    // Add all edges
+    edges.forEach(function (edge) {
+        liens.ajouterLien(new Lien(edge[2], vertices[edge[0]], vertices[edge[1]]));
+    });
+
+    // Define vertex positions: {x, y}
+    var positions = [
+        { x: 200, y: 300 }, // 1 (Start)
+        { x: 400, y: 200 }, // 2
+        { x: 600, y: 200 }, // 3
+        { x: 400, y: 400 }, // 4
+        { x: 600, y: 400 }, // 5
+        { x: 800, y: 300 }  // 6 (End)
+    ];
+
+    // Set vertex positions
+    vertices.forEach(function (vertex, i) {
+        vertex.position = positions[i];
+    });
+
+    // Add vertices to scene if scene is provided
+    if (scene) {
+        vertices.forEach(function (vertex) {
+            scene.addItem(vertex);
+        });
+    }
+
+    return vertices;
+}

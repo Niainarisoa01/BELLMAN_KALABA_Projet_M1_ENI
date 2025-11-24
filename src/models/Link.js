@@ -46,14 +46,15 @@ export class Lien {
             painter.stroke();
 
 
-            // flèche
+            // flèche (Filled Arrow)
             painter.beginPath();
-
-            painter.moveTo(length - 7, -5);
-            painter.lineTo(length, 0);
-            painter.lineTo(length - 7, 5);
-
-            painter.stroke();
+            var arrowSize = 10;
+            painter.moveTo(length, 0);
+            painter.lineTo(length - arrowSize, -arrowSize / 2);
+            painter.lineTo(length - arrowSize, arrowSize / 2);
+            painter.closePath();
+            painter.fillStyle = painter.strokeStyle; // Use same color as line
+            painter.fill();
 
 
             // cout

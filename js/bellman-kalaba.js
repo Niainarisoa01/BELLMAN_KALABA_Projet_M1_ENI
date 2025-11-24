@@ -342,6 +342,40 @@ BellmanKalabaAlgorithm.prototype = {
             sommet = sommet.suivant;
         }
         return chemin;
+    },
+
+    centerGraph: function (canvasWidth, canvasHeight) {
+        if (this.sommets.length === 0) return;
+
+        var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+
+        // Calculate bounding box
+        for (var s of this.sommets) {
+            if (s.position.x < minX) minX = s.position.x;
+            if (s.position.x > maxX) maxX = s.position.x;
+            if (s.position.y < minY) minY = s.position.y;
+            if (s.position.y > maxY) maxY = s.position.y;
+        }
+
+        var graphWidth = maxX - minX;
+        var graphHeight = maxY - minY;
+
+        var centerX = minX + graphWidth / 2;
+        var centerY = minY + graphHeight / 2;
+
+        var targetX = canvasWidth / 2;
+        var targetY = canvasHeight / 2;
+
+        var offsetX = targetX - centerX;
+        var offsetY = targetY - centerY;
+
+        // Apply offset
+        for (var s of this.sommets) {
+            s.position.x += offsetX;
+            s.position.y += offsetY;
+        }
+
+        if (this.view) this.view.refresh();
     }
 };
 

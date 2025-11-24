@@ -38,6 +38,8 @@ function initializeBellmanApp(config) {
         } else {
             loadExampleGraph(liens, gs);
         }
+        // Auto-center graph
+        liens.centerGraph(canvas.width, canvas.height);
     }
 
     // Add existing links to scene

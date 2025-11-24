@@ -20,47 +20,34 @@
         <a href="ExempleMax.html" class="btn">Exemple max</a>
         <a href="ExempleCheminsMultiples.html" class="btn">Multi-Chemins</a>
       </div>
+      <div class="canvas-container" id="canvasContainer">
+        <canvas id="canvas"></canvas>
+      </div>
     </div>
-  </header>
-  <div class="main-container">
-    <div class="sidebar">
-      <h3>Contrôles</h3>
-      <button id="btn1" class="btn active">Ajouter un sommet</button>
-      <button id="btn2" class="btn">Positionner un sommet</button>
-      <button id="btn3" class="btn">Mettre à jour</button>
-      <button id="btn4" class="btn">Supprimer</button>
-      <button id="btn5" class="btn">Choisir Debut</button>
-      <button id="btn6" class="btn">Choisir Fin</button>
-      <button id="btn7" class="btn" style="background-color: #e67e22; margin-top: auto;">Chercher</button>
-    </div>
-    <div class="canvas-container" id="canvasContainer">
-      <canvas id="canvas"></canvas>
-    </div>
-  </div>
-  <script type="module">
-    import { initializeBellmanApp } from './src/main.js';
+    <script type="module">
+      import { initializeBellmanApp } from './src/main.js';
 
-    // Simple button active state logic
-    document.querySelectorAll('.sidebar .btn').forEach(btn => {
-      btn.addEventListener('click', function () {
-        document.querySelectorAll('.sidebar .btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
+      // Simple button active state logic
+      document.querySelectorAll('.sidebar .btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.sidebar .btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
       });
-    });
 
-    initializeBellmanApp({
-      isMin: true,
-      buttonIds: {
-        item: "btn1",
-        drag: "btn2",
-        update: "btn3",
-        delete: "btn4",
-        debut: "btn5",
-        fin: "btn6",
-        chercher: "btn7"
-      }
-    });
-  </script>
+      initializeBellmanApp({
+        isMin: true,
+        buttonIds: {
+          item: "btn1",
+          drag: "btn2",
+          update: "btn3",
+          delete: "btn4",
+          debut: "btn5",
+          fin: "btn6",
+          chercher: "btn7"
+        }
+      });
+    </script>
 </body>
 
 </html>

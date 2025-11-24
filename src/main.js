@@ -71,7 +71,8 @@ export function initializeBellmanApp(config) {
         delete: "btn4",
         debut: "btn5",
         fin: "btn6",
-        chercher: "btn7"
+        chercher: "btn7",
+        link: "btn8" // New button
     };
 
     // Get button elements
@@ -82,6 +83,7 @@ export function initializeBellmanApp(config) {
     var debutButton = document.getElementById(buttonIds.debut);
     var finButton = document.getElementById(buttonIds.fin);
     var chercherBouton = document.getElementById(buttonIds.chercher);
+    var linkButton = document.getElementById(buttonIds.link);
 
     // Mouse position helper
     function getMousePosition(element, event) {
@@ -131,6 +133,12 @@ export function initializeBellmanApp(config) {
     if (itemButton) {
         itemButton.addEventListener('click', function (event) {
             viewManager.mode = "item";
+        });
+    }
+
+    if (linkButton) {
+        linkButton.addEventListener('click', function (event) {
+            viewManager.mode = "link";
         });
     }
 

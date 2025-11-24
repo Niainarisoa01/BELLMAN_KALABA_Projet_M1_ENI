@@ -65,7 +65,7 @@ export class ViewManager {
                     };
                 }
                 break;
-            case "item":
+            case "link":
                 var item = this.getSommet(position);
                 if (item != null) {
                     var sommet = new Sommet(0, 0);
@@ -79,12 +79,15 @@ export class ViewManager {
                     this.scene.addItem(lien);
                 }
                 break;
+            case "item":
+                // Node creation doesn't need drag start
+                break;
         }
     }
 
     onMouseMove(position) {
         switch (this.mode) {
-            case "item":
+            case "link":
             case "drag":
                 if (this.currentObject != null) {
                     this.currentObject.item.position = {
@@ -103,7 +106,7 @@ export class ViewManager {
             case "drag":
                 this.currentObject = null;
                 break;
-            case "item":
+            case "link":
                 if (this.currentObject != null) {
                     var item = this.getSommet(position), cout;
                     if (item != null && item != this.currentObject.link.precedent && !isNaN(cout = parseInt(prompt("Saisisez le cout du chemin")))) {
@@ -114,7 +117,12 @@ export class ViewManager {
                     this.currentObject = null;
                     this.scene.clear();
                     this.scene.paint();
-                } else {
+                }
+                break;
+            case "item":
+                // Create node on click (if not on existing node)
+                var item = this.getSommet(position);
+                if (item == null) {
                     var sommet = this.moteur.ajouterSommet();
                     sommet.position = {
                         x: position.x,

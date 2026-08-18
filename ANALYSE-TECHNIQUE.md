@@ -47,3 +47,7 @@ Un nouvel exemple `ExempleComplexe.html` contient 18 sommets et 39 arcs, organis
 ## Animation du calcul
 
 Le calcul animé est validé dans le navigateur sur le réseau complexe. Le panneau affiche l’étape courante (`Étape 2 / 18`), le sommet traité (`Sommet 17`), la formule `min(7 + V(18) = 7) = 7`, ainsi que les commandes **Pause** et **Afficher le résultat**. Le sommet actif est entouré et marqué `EN COURS`, tandis que les valeurs déjà traitées et les arcs évalués restent visibles.
+
+## Exemple complexe par défaut
+
+La page principale `MinBellman.html` charge maintenant automatiquement le réseau complexe de 18 sommets et 39 arcs. Le panneau indique « Exemple complexe chargé », l’origine est le sommet 1 et la destination le sommet 18. Le calcul animé démarre directement et affiche les étapes de propagation avec une valeur optimale finale de 19.

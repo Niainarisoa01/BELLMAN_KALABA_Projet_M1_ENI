@@ -429,7 +429,7 @@ class OptiGraphApp {
       if (index >= animation.steps.length) { this.finishAnimation(); return; }
       this.showAnimationStep(index);
       index += 1;
-      this.animationTimer = setTimeout(tick, 720);
+      this.animationTimer = setTimeout(tick, animation.steps.length > 60 ? 180 : 720);
     };
     tick();
   }
@@ -501,7 +501,7 @@ class OptiGraphApp {
     const orderedLevels = [...groups.keys()].sort((a, b) => a - b);
     const marginX = 70;
     const marginY = 68;
-    const xGap = orderedLevels.length > 1 ? Math.max(95, (this.renderer.width - marginX * 2) / (orderedLevels.length - 1)) : 0;
+    const xGap = orderedLevels.length > 1 ? Math.max(44, (this.renderer.width - marginX * 2) / (orderedLevels.length - 1)) : 0;
     this.remember();
     orderedLevels.forEach((level, column) => {
       const group = groups.get(level);
@@ -523,13 +523,29 @@ class OptiGraphApp {
   loadExample(kind) {
     const isMulti = kind === "multi";
     const isComplex = kind === "complex";
+    const isMega = kind === "mega";
     const isMax = kind === "max";
-    const positions = isComplex
+    const megaEdges = [];
+    if (isMega) {
+      const branchSize = 23;
+      for (let branch = 0; branch < 5; branch += 1) {
+        const first = 2 + branch * branchSize;
+        megaEdges.push([1, first, 1]);
+        for (let offset = 0; offset < branchSize - 1; offset += 1) megaEdges.push([first + offset, first + offset + 1, 1]);
+        megaEdges.push([first + branchSize - 1, 117, 1]);
+      }
+      megaEdges.push([1, 118, 10], [118, 119, 10], [119, 120, 10], [120, 117, 10]);
+    }
+    const positions = isMega
+      ? Array.from({ length: 120 }, (_, index) => [80 + (index % 10) * 100, 80 + Math.floor(index / 10) * 90])
+      : isComplex
       ? Array.from({ length: 18 }, (_, index) => [90 + (index % 6) * 130, 100 + Math.floor(index / 6) * 145])
       : isMulti
         ? [[90, 190], [250, 90], [430, 90], [250, 290], [430, 290], [650, 190]]
         : [[80, 190], [205, 90], [205, 290], [340, 190], [475, 90], [475, 290], [610, 190], [745, 90], [745, 290], [870, 190]];
-    const edges = isComplex
+    const edges = isMega
+      ? megaEdges
+      : isComplex
       ? [
         [1, 2, 5], [1, 3, 4], [1, 4, 6],
         [2, 5, 4], [2, 6, 3], [2, 7, 8], [3, 5, 5], [3, 6, 2], [3, 8, 5], [4, 6, 3], [4, 7, 4], [4, 8, 1],
@@ -541,9 +557,9 @@ class OptiGraphApp {
         ? [[1, 2, 5], [2, 3, 5], [3, 6, 5], [1, 4, 5], [4, 5, 5], [5, 6, 5], [2, 5, 8], [4, 3, 8]]
         : [[1, 2, 4], [1, 3, 2], [2, 4, 5], [3, 4, 3], [2, 5, 7], [4, 6, 4], [5, 6, 2], [4, 7, 6], [6, 7, 3], [6, 8, 5], [7, 9, 4], [8, 10, 4], [9, 10, 3]];
     this.state.nodes = positions.map((position, index) => new GraphNode(index + 1, position[0], position[1]));
-    this.state.edges = edges.map((edge, index) => new GraphEdge(index + 1, edge[0], edge[1], isMax && !isMulti ? edge[2] + (index % 3) : edge[2]));
+    this.state.edges = edges.map((edge, index) => new GraphEdge(index + 1, edge[0], edge[1], isMax && !isMulti && !isMega ? edge[2] + (index % 3) : edge[2]));
     this.state.startId = 1;
-    this.state.endId = isComplex ? 18 : isMulti ? 6 : 10;
+    this.state.endId = isMega ? 117 : isComplex ? 18 : isMulti ? 6 : 10;
     this.state.nextId = this.state.nodes.length + 1;
     this.state.nextEdgeId = this.state.edges.length + 1;
     this.state.result = null;

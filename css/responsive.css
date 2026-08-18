@@ -196,3 +196,22 @@ body,
 .progress-detail span { overflow:hidden; color:#a7d8ba; text-overflow:ellipsis; white-space:nowrap; }
 .calc-actions { display:flex; justify-content:flex-end; gap:7px; margin-top:11px; }
 .calc-actions .toolbar-button { padding:6px 9px; }
+
+
+/* Long graph workspace: keep the analysis panel reachable */
+.workspace-page { overflow-x: hidden; overflow-y: auto; }
+.workspace-layout { height: auto; min-height: calc(100vh - 68px); align-items: stretch; }
+.workspace-main { min-height: calc(100vh - 68px); grid-template-rows: 47px 620px auto; }
+.canvas-container { height: 620px; min-height: 620px; overflow: hidden; }
+.results-panel { max-height: none; min-height: 320px; overflow: visible; }
+@media (max-width: 760px) {
+  .workspace-layout { min-height: auto; }
+  .workspace-main { min-height: auto; grid-template-rows: 47px 620px auto; }
+  .canvas-container { height: 620px; min-height: 620px; }
+  .results-panel { min-height: 360px; }
+}
+
+
+/* Ensure the bottom analysis section can always be reached on short viewports */
+.workspace-page { padding-bottom: 180px; }
+.workspace-layout { padding-bottom: 40px; }

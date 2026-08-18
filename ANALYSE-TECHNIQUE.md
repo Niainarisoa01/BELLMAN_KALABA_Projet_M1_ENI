@@ -51,3 +51,15 @@ Le calcul animé est validé dans le navigateur sur le réseau complexe. Le pann
 ## Exemple complexe par défaut
 
 La page principale `MinBellman.html` charge maintenant automatiquement le réseau complexe de 18 sommets et 39 arcs. Le panneau indique « Exemple complexe chargé », l’origine est le sommet 1 et la destination le sommet 18. Le calcul animé démarre directement et affiche les étapes de propagation avec une valeur optimale finale de 19.
+
+## Réseau 120 sommets et défilement
+
+Le réseau par défaut contient 120 sommets et 124 arcs. Le solveur doit produire cinq chemins de coût minimal égal à 24. Le panneau inférieur est rendu après un canevas de 620 px ; le document atteint environ 1100 px de hauteur. La feuille de style a été renforcée avec un défilement vertical explicite et un panneau de résultats sans `max-height` afin de conserver les valeurs et les cinq chemins accessibles.
+
+## Validation du défilement vertical
+
+Après l’ajout de 180 px d’espace inférieur, le navigateur signale désormais un contenu sous le viewport et permet le défilement jusqu’au bas de la page. Le panneau **Analyse de la résolution** reste accessible sous le canevas, même avec les 120 sommets affichés.
+
+## Validation du réseau à cinq solutions
+
+Le laboratoire charge 120 sommets et 124 arcs. Le calcul animé atteint l’étape `6 / 120` avec la formule `min(1 + V(117) = 1) = 1`, puis le résultat affiche **Plusieurs solutions optimales**, une valeur de 24 et exactement cinq chemins distincts, chacun de coût 24. Les valeurs de Bellman sont visibles pour les 120 sommets. La console du navigateur ne signale aucune erreur.

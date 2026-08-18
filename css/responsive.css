@@ -227,3 +227,7 @@ body,
 .tool-button b,.endpoint-button b { line-height:1.25; }
 .toolbar-button,.button { white-space:nowrap; }
 .solve-button { min-height:44px; font-size:12px; letter-spacing:.01em; }
+
+
+/* Keep the primary calculation action directly below the endpoints */
+.control-panel > .panel-footer { margin-top: -14px; }

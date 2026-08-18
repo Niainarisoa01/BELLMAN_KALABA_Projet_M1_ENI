@@ -14,7 +14,7 @@ Les résultats comprennent la valeur optimale, le chemin principal, la liste des
 
 ## Démarrage local
 
-Le projet ne nécessite ni framework ni installation de dépendances. La page principale charge par défaut un scénario de 120 sommets et 124 arcs, construit autour de cinq branches de même coût. Bellman-Kalaba détecte les cinq solutions optimales distinctes, chacune de valeur 24, tandis qu’un chemin de détour plus coûteux permet de vérifier la sélection de l’optimum.
+Le projet ne nécessite ni framework ni installation de dépendances. La page principale charge par défaut un scénario guidé de 27 sommets et plusieurs niveaux de décision. Ce cas est volontairement plus lisible pour une première prise en main : l’utilisateur peut suivre les étapes de modélisation, de définition des extrémités et de résolution animée. Le scénario avancé de 120 sommets et 124 arcs reste disponible dans `Exemple120.html` et conserve ses cinq solutions optimales de valeur 24.
 
  Un serveur HTTP local est recommandé pour servir les modules JavaScript ES natifs.
 
@@ -37,13 +37,14 @@ Ouvrez ensuite [http://localhost:8000/](http://localhost:8000/) dans un navigate
 | `ExempleMax.html` | Graphe préchargé pour le chemin critique |
 | `ExempleCheminsMultiples.html` | Cas d’étude avec deux solutions optimales |
 | `ExempleComplexe.html` | Réseau de 18 sommets et 39 arcs à résoudre |
-| `Exemple120.html` | Réseau de 120 sommets avec cinq solutions optimales de coût égal |
+| `Exemple27.html` | Scénario guidé par défaut de 27 sommets |
+| `Exemple120.html` | Réseau avancé de 120 sommets avec cinq solutions optimales de coût égal |
 
 ## Utilisation de l’éditeur
 
 Sélectionnez un outil dans le panneau latéral, puis interagissez avec le canevas. Le bouton **Ajouter un sommet** crée un sommet à l’emplacement du clic. Avec **Ajouter un arc**, glissez depuis le sommet source vers le sommet destination ; une fenêtre non bloquante permet alors de saisir le poids. Les outils **Origine** et **Destination** définissent les extrémités du problème.
 
-Le bouton **Organiser automatiquement** répartit les sommets par niveaux topologiques, depuis les sources vers les destinations, afin de rendre les arcs et les dépendances lisibles. Le laboratoire est verticalement défilable : le canevas reste stable et le panneau inférieur contient les résultats, les cinq chemins et les valeurs de Bellman de tous les sommets. Après un clic sur **Exécuter Bellman-Kalaba**, le calcul est présenté comme une animation : le sommet courant, les arcs candidats, la formule de propagation et la valeur obtenue sont affichés étape par étape. L’animation peut être mise en pause, reprise ou interrompue avec **Afficher le résultat**. Lorsqu’un cycle est présent, l’application bascule en placement en grille et signale que le cycle doit être supprimé avant le calcul. Le bouton **Centrer le graphe** relance également cette organisation.
+Le parcours conseillé commence par le scénario guidé de 27 sommets. Le panneau de gauche présente trois étapes : modéliser, définir l’origine et la destination, puis résoudre. Le bouton **Organiser automatiquement** répartit ensuite les sommets par niveaux topologiques, depuis les sources vers les destinations, afin de rendre les arcs et les dépendances lisibles. Le laboratoire est verticalement défilable : le canevas reste stable et le panneau inférieur contient les résultats, les cinq chemins et les valeurs de Bellman de tous les sommets. Après un clic sur **Exécuter Bellman-Kalaba**, le calcul est présenté comme une animation : le sommet courant, les arcs candidats, la formule de propagation et la valeur obtenue sont affichés étape par étape. L’animation peut être mise en pause, reprise ou interrompue avec **Afficher le résultat**. Lorsqu’un cycle est présent, l’application bascule en placement en grille et signale que le cycle doit être supprimé avant le calcul. Le bouton **Centrer le graphe** relance également cette organisation.
 
 Les raccourcis clavier suivants accélèrent l’édition : `N` pour un sommet, `L` pour un arc, `M` pour déplacer, `E` pour modifier un poids, `D` pour supprimer, `S` pour l’origine et `T` pour la destination. `Ctrl/Cmd + Z` annule la dernière action et `Ctrl/Cmd + Shift + Z` la rétablit.
 

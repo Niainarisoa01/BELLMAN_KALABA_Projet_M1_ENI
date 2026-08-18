@@ -63,3 +63,7 @@ Après l’ajout de 180 px d’espace inférieur, le navigateur signale désorma
 ## Validation du réseau à cinq solutions
 
 Le laboratoire charge 120 sommets et 124 arcs. Le calcul animé atteint l’étape `6 / 120` avec la formule `min(1 + V(117) = 1) = 1`, puis le résultat affiche **Plusieurs solutions optimales**, une valeur de 24 et exactement cinq chemins distincts, chacun de coût 24. Les valeurs de Bellman sont visibles pour les 120 sommets. La console du navigateur ne signale aucune erreur.
+
+## Interface guidée et exemple par défaut de 27 sommets
+
+La page principale présente maintenant un parcours en trois étapes : **Modéliser**, **Définir** et **Résoudre**. Les libellés des outils ont été simplifiés (« Relier deux sommets », « Réorganiser », « Ajuster un poids », « Supprimer un élément ») et le bouton principal est devenu « Résoudre le réseau ». Le scénario chargé contient 27 sommets et 56 arcs ; sa résolution animée aboutit à une valeur optimale de 16 et affiche les valeurs de Bellman pendant la propagation.

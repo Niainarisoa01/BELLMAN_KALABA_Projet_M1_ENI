@@ -215,3 +215,15 @@ body,
 /* Ensure the bottom analysis section can always be reached on short viewports */
 .workspace-page { padding-bottom: 180px; }
 .workspace-layout { padding-bottom: 40px; }
+
+
+/* Guided first-run experience */
+.quick-guide { display:grid; gap:6px; margin-top:16px; padding:10px; border:1px solid #3b8d62; border-radius:10px; background:#124a36; }
+.quick-guide>div { display:flex; align-items:center; gap:8px; color:#d8f2e2; font-size:10px; }
+.quick-guide b { display:grid; place-items:center; flex:none; width:20px; height:20px; border-radius:50%; color:#0d3b2e; background:#a7d8ba; font:700 10px 'DM Mono',monospace; }
+.quick-guide span { display:block; font-weight:800; }
+.quick-guide small { display:block; margin-top:2px; color:#a8d8b8; font-size:8px; font-weight:500; }
+.panel-intro p { max-width:230px; }
+.tool-button b,.endpoint-button b { line-height:1.25; }
+.toolbar-button,.button { white-space:nowrap; }
+.solve-button { min-height:44px; font-size:12px; letter-spacing:.01em; }

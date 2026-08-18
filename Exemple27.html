@@ -4,19 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Laboratoire OptiGraph — résolution de chemin de coût minimal par Bellman-Kalaba." />
-  <title>OptiGraph Lab — Cinq solutions optimales</title>
+  <title>OptiGraph Lab — Réseau guidé de 27 sommets</title>
   <link rel="stylesheet" href="css/responsive.css" />
 </head>
-<body class="workspace-page" data-mode="min" data-example="mega">
+<body class="workspace-page" data-mode="min" data-example="starter27">
   <header class="site-header workspace-header">
     <a class="brand" href="index.html" aria-label="OptiGraph Lab, accueil"><span class="brand-mark">OG</span><span><strong>OptiGraph</strong><small>LABORATOIRE RO</small></span></a>
-    <div class="workspace-title"><span class="mode-pill min-pill">MIN</span><span>Réseau 120 sommets · coût minimal</span></div>
-    <nav class="top-nav" aria-label="Navigation principale"><a class="nav-link" href="index.html">Accueil</a><a class="nav-link" href="MinBellman.html">Minimisation</a><a class="nav-link active" href="Exemple120.html">120 sommets</a><a class="nav-link" href="MaxBellman.html">Maximisation</a></nav>
+    <div class="workspace-title"><span class="mode-pill min-pill">MIN</span><span>Exemple guidé · coût minimal</span></div>
+    <nav class="top-nav" aria-label="Navigation principale"><a class="nav-link" href="index.html">Accueil</a><a class="nav-link" href="MinBellman.html">Minimisation</a><a class="nav-link active" href="Exemple27.html">27 sommets</a><a class="nav-link" href="MaxBellman.html">Maximisation</a></nav>
   </header>
   <main class="workspace-layout">
     <aside class="control-panel" aria-label="Panneau de contrôle">
-      <div class="panel-intro"><div class="eyebrow">Exemple 120 sommets chargé</div><h1>Analysez le réseau</h1><p>Ce réseau contient cinq solutions optimales de même valeur. Lancez l’animation pour observer leur détection.</p></div>
-      <div class="tool-section"><div class="tool-section-title">Édition</div><div class="tool-grid"><button class="tool-button active" data-tool="node"><span class="tool-key">N</span><span><b>Ajouter un sommet</b><small>Cliquez sur le canevas</small></span></button><button class="tool-button" data-tool="edge"><span class="tool-key">L</span><span><b>Relier deux sommets</b><small>Glissez de la source vers la cible</small></span></button><button class="tool-button" data-tool="move"><span class="tool-key">M</span><span><b>Réorganiser</b><small>Déplacez les sommets</small></span></button><button class="tool-button" data-tool="edit"><span class="tool-key">E</span><span><b>Ajuster un poids</b><small>Double-cliquez sur un arc</small></span></button><button class="tool-button" data-tool="delete"><span class="tool-key">D</span><span><b>Supprimer un élément</b><small>Cliquez sur un sommet ou un arc</small></span></button></div></div>
+      <div class="panel-intro"><div class="eyebrow">Exemple guidé chargé</div><h1>Construisez votre résolution</h1><p>Un réseau de 27 sommets est prêt. Suivez les trois étapes ci-dessous, puis lancez le calcul animé.</p><div class="quick-guide"><div><b>1</b><span>Modéliser<small>Ajoutez ou déplacez les éléments</small></span></div><div><b>2</b><span>Définir<small>Choisissez origine et destination</small></span></div><div><b>3</b><span>Résoudre<small>Observez chaque valeur calculée</small></span></div></div></div>
+      <div class="tool-section"><div class="tool-section-title">Édition</div><div class="tool-grid"><button class="tool-button active" data-tool="node"><span class="tool-key">N</span><span><b>Ajouter un sommet</b><small>Cliquez dans le canevas</small></span></button><button class="tool-button" data-tool="edge"><span class="tool-key">L</span><span><b>Relier deux sommets</b><small>Glissez de la source vers la cible</small></span></button><button class="tool-button" data-tool="move"><span class="tool-key">M</span><span><b>Réorganiser</b><small>Déplacez les sommets</small></span></button><button class="tool-button" data-tool="edit"><span class="tool-key">E</span><span><b>Ajuster un poids</b><small>Double-cliquez sur un arc</small></span></button><button class="tool-button" data-tool="delete"><span class="tool-key">D</span><span><b>Supprimer un élément</b><small>Cliquez sur un sommet ou un arc</small></span></button></div></div>
       <div class="tool-section"><div class="tool-section-title">Paramètres</div><div class="endpoint-grid"><button class="endpoint-button" data-tool="start"><span class="endpoint-icon start-icon">S</span><span><b>Origine</b><small id="startStatus">Non définie</small></span></button><button class="endpoint-button" data-tool="end"><span class="endpoint-icon end-icon">T</span><span><b>Destination</b><small id="endStatus">Non définie</small></span></button></div></div>
       <div class="panel-footer"><button id="solveButton" class="button button-primary solve-button"><span>Résoudre le réseau</span><span aria-hidden="true">→</span></button><button id="resetButton" class="text-button">Réinitialiser le modèle</button></div>
     </aside>

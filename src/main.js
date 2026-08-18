@@ -331,7 +331,7 @@ class OptiGraphApp {
     document.addEventListener("keydown", (event) => this.keyboard(event));
   }
 
-  setTool(tool) { this.state.tool = tool; this.state.selectedNodeId = null; this.state.selectedEdgeId = null; this.state.linkPreview = null; document.querySelectorAll("[data-tool]").forEach((button) => button.classList.toggle("active", button.dataset.tool === tool)); const labels = { node: "Ajout de sommets", edge: "Création d’arcs", move: "Déplacement", edit: "Modification des coûts", delete: "Suppression", start: "Sélection de l’origine", end: "Sélection de la destination" }; this.setLiveStatus(labels[tool] || "Prêt à modéliser"); this.renderer.draw(); }
+  setTool(tool) { this.state.tool = tool; this.state.selectedNodeId = null; this.state.selectedEdgeId = null; this.state.linkPreview = null; document.querySelectorAll("[data-tool]").forEach((button) => button.classList.toggle("active", button.dataset.tool === tool)); const labels = { node: "Étape 1 · cliquez pour ajouter un sommet", edge: "Étape 2 · glissez de la source vers la cible", move: "Déplacez les sommets pour organiser le réseau", edit: "Double-cliquez sur un arc pour ajuster son poids", delete: "Cliquez sur l’élément à supprimer", start: "Choisissez le sommet origine", end: "Choisissez le sommet destination" }; this.setLiveStatus(labels[tool] || "Prêt à modéliser"); this.renderer.draw(); }
 
   pointerDown(event) { const point = this.renderer.point(event); const node = this.renderer.nodeAt(point); if (this.state.tool === "move" && node) { this.state.dragging = { id: node.id, startX: node.x, startY: node.y, moved: false }; this.canvas.setPointerCapture(event.pointerId); } else if (this.state.tool === "edge" && node) { this.state.linkPreview = { from: node.id, to: point }; this.canvas.setPointerCapture(event.pointerId); } else if (this.state.tool === "node") { this.state.dragging = { creating: true, start: point, moved: false }; } }
 
@@ -523,9 +523,18 @@ class OptiGraphApp {
   loadExample(kind) {
     const isMulti = kind === "multi";
     const isComplex = kind === "complex";
+    const isStarter27 = kind === "starter27";
     const isMega = kind === "mega";
     const isMax = kind === "max";
     const megaEdges = [];
+    const starterEdges = [
+      [1,2,4],[1,3,2],[1,4,3],
+      [2,5,4],[2,6,6],[3,6,2],[3,7,3],[3,8,4],[4,8,2],[4,9,5],
+      [5,10,3],[5,11,5],[6,10,4],[6,12,3],[7,11,2],[7,12,4],[7,13,6],[8,12,2],[8,13,3],[8,14,4],[9,13,2],[9,14,5],
+      [10,15,4],[10,16,6],[11,15,2],[11,17,4],[12,16,3],[12,17,3],[12,18,5],[13,17,2],[13,18,4],[13,19,3],[14,18,2],[14,19,5],
+      [15,20,3],[15,21,5],[16,20,4],[16,22,2],[17,21,2],[17,22,3],[17,23,4],[18,22,2],[18,23,2],[18,24,3],[19,23,3],[19,24,1],
+      [20,25,4],[21,25,3],[21,26,5],[22,25,2],[22,26,2],[23,26,3],[24,25,4],[24,26,1],[25,27,5],[26,27,3]
+    ];
     if (isMega) {
       const branchSize = 23;
       for (let branch = 0; branch < 5; branch += 1) {
@@ -538,6 +547,8 @@ class OptiGraphApp {
     }
     const positions = isMega
       ? Array.from({ length: 120 }, (_, index) => [80 + (index % 10) * 100, 80 + Math.floor(index / 10) * 90])
+      : isStarter27
+        ? Array.from({ length: 27 }, (_, index) => [80 + (index % 9) * 105, 90 + Math.floor(index / 9) * 145])
       : isComplex
       ? Array.from({ length: 18 }, (_, index) => [90 + (index % 6) * 130, 100 + Math.floor(index / 6) * 145])
       : isMulti
@@ -545,6 +556,8 @@ class OptiGraphApp {
         : [[80, 190], [205, 90], [205, 290], [340, 190], [475, 90], [475, 290], [610, 190], [745, 90], [745, 290], [870, 190]];
     const edges = isMega
       ? megaEdges
+      : isStarter27
+        ? starterEdges
       : isComplex
       ? [
         [1, 2, 5], [1, 3, 4], [1, 4, 6],
@@ -557,9 +570,9 @@ class OptiGraphApp {
         ? [[1, 2, 5], [2, 3, 5], [3, 6, 5], [1, 4, 5], [4, 5, 5], [5, 6, 5], [2, 5, 8], [4, 3, 8]]
         : [[1, 2, 4], [1, 3, 2], [2, 4, 5], [3, 4, 3], [2, 5, 7], [4, 6, 4], [5, 6, 2], [4, 7, 6], [6, 7, 3], [6, 8, 5], [7, 9, 4], [8, 10, 4], [9, 10, 3]];
     this.state.nodes = positions.map((position, index) => new GraphNode(index + 1, position[0], position[1]));
-    this.state.edges = edges.map((edge, index) => new GraphEdge(index + 1, edge[0], edge[1], isMax && !isMulti && !isMega ? edge[2] + (index % 3) : edge[2]));
+    this.state.edges = edges.map((edge, index) => new GraphEdge(index + 1, edge[0], edge[1], isMax && !isMulti && !isMega && !isStarter27 ? edge[2] + (index % 3) : edge[2]));
     this.state.startId = 1;
-    this.state.endId = isMega ? 117 : isComplex ? 18 : isMulti ? 6 : 10;
+    this.state.endId = isMega ? 117 : isStarter27 ? 27 : isComplex ? 18 : isMulti ? 6 : 10;
     this.state.nextId = this.state.nodes.length + 1;
     this.state.nextEdgeId = this.state.edges.length + 1;
     this.state.result = null;

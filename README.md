@@ -14,7 +14,9 @@ Les résultats comprennent la valeur optimale, le chemin principal, la liste des
 
 ## Démarrage local
 
-Le projet ne nécessite ni framework ni installation de dépendances. Un serveur HTTP local est recommandé pour servir les modules JavaScript ES natifs.
+Le projet ne nécessite ni framework ni installation de dépendances. Le scénario complexe intégré contient 18 sommets, 39 arcs, plusieurs niveaux de décision et des branches concurrentes ; il est conçu pour entraîner la lecture des valeurs de Bellman sur un cas plus proche d’un réseau de projet réel.
+
+ Un serveur HTTP local est recommandé pour servir les modules JavaScript ES natifs.
 
 ```bash
 git clone https://github.com/Niainarisoa01/BELLMAN_KALABA_Projet_M1_ENI.git
@@ -34,10 +36,13 @@ Ouvrez ensuite [http://localhost:8000/](http://localhost:8000/) dans un navigate
 | `ExempleMin.html` | Graphe préchargé pour le plus court chemin |
 | `ExempleMax.html` | Graphe préchargé pour le chemin critique |
 | `ExempleCheminsMultiples.html` | Cas d’étude avec deux solutions optimales |
+| `ExempleComplexe.html` | Réseau de 18 sommets et 39 arcs à résoudre |
 
 ## Utilisation de l’éditeur
 
 Sélectionnez un outil dans le panneau latéral, puis interagissez avec le canevas. Le bouton **Ajouter un sommet** crée un sommet à l’emplacement du clic. Avec **Ajouter un arc**, glissez depuis le sommet source vers le sommet destination ; une fenêtre non bloquante permet alors de saisir le poids. Les outils **Origine** et **Destination** définissent les extrémités du problème.
+
+Le bouton **Organiser automatiquement** répartit les sommets par niveaux topologiques, depuis les sources vers les destinations, afin de rendre les arcs et les dépendances lisibles. Après un clic sur **Exécuter Bellman-Kalaba**, le calcul est présenté comme une animation : le sommet courant, les arcs candidats, la formule de propagation et la valeur obtenue sont affichés étape par étape. L’animation peut être mise en pause, reprise ou interrompue avec **Afficher le résultat**. Lorsqu’un cycle est présent, l’application bascule en placement en grille et signale que le cycle doit être supprimé avant le calcul. Le bouton **Centrer le graphe** relance également cette organisation.
 
 Les raccourcis clavier suivants accélèrent l’édition : `N` pour un sommet, `L` pour un arc, `M` pour déplacer, `E` pour modifier un poids, `D` pour supprimer, `S` pour l’origine et `T` pour la destination. `Ctrl/Cmd + Z` annule la dernière action et `Ctrl/Cmd + Shift + Z` la rétablit.
 

@@ -182,3 +182,17 @@ body,
 .modal-card p,
 .modal-label { color: #c1dfca; }
 .modal-input { color: #ffffff; border-color: #65b080; background: #0d3b2e; }
+
+
+/* Calculation animation */
+.calc-progress { margin-top:16px; padding:12px 14px; border:1px solid #3f8763; border-radius:10px; background:#173f2e; }
+.calc-progress.hidden { display:none; }
+.progress-top,.progress-detail { display:flex; align-items:center; justify-content:space-between; gap:12px; color:#cfeedd; font:10px 'DM Mono',monospace; }
+.progress-top span:last-child { color:#a7d8ba; }
+.progress-track { height:7px; margin:10px 0; overflow:hidden; border-radius:99px; background:#0d3b2e; }
+.progress-track span { display:block; width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#47ad78,#a7d8ba); transition:width .22s ease-out; }
+.progress-detail { justify-content:flex-start; }
+.progress-detail strong { color:#ffffff; font-size:11px; }
+.progress-detail span { overflow:hidden; color:#a7d8ba; text-overflow:ellipsis; white-space:nowrap; }
+.calc-actions { display:flex; justify-content:flex-end; gap:7px; margin-top:11px; }
+.calc-actions .toolbar-button { padding:6px 9px; }

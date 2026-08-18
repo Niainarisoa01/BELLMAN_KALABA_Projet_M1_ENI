@@ -58,7 +58,7 @@ class BellmanKalabaSolver {
       });
     }
     if (topo.length !== nodes.length) {
-      return { ok: false, message: "Le graphe contient un cycle. Bellman-Kalaba est ici configuré pour des graphes orientés acycliques (réseaux de projet)." };
+      return { ok: false, message: "Ce graphe contient un cycle. Bellman-Kalaba attend ici un graphe orienté acyclique. Utilisez « Organiser automatiquement », puis supprimez au moins un arc du cycle avant de relancer le calcul." };
     }
 
     const values = new Map(nodes.map((node) => [node.id, this.infinity]));
@@ -66,7 +66,7 @@ class BellmanKalabaSolver {
     const steps = [];
     values.set(endId, 0);
     paths.set(endId, [[endId]]);
-    steps.push({ nodeId: endId, value: 0, kind: "initialisation" });
+    steps.push({ nodeId: endId, value: 0, kind: "initialisation", candidates: [], selectedEdgeIds: [] });
 
     const reversed = [...topo].reverse();
     for (const nodeId of reversed) {
@@ -88,7 +88,13 @@ class BellmanKalabaSolver {
       });
       values.set(nodeId, best);
       paths.set(nodeId, nodePaths);
-      steps.push({ nodeId, value: best, kind: optimalCandidates.length > 1 ? "égalité" : "propagation" });
+      steps.push({
+        nodeId,
+        value: best,
+        kind: optimalCandidates.length > 1 ? "égalité" : "propagation",
+        candidates: candidates.map(({ edge, value }) => ({ edgeId: edge.id, from: edge.from, to: edge.to, weight: edge.weight, value })),
+        selectedEdgeIds: optimalCandidates.map(({ edge }) => edge.id)
+      });
     }
 
     if (!Number.isFinite(values.get(startId))) {
@@ -193,10 +199,14 @@ class CanvasRenderer {
     const from = this.state.nodes.find((node) => node.id === edge.from);
     const to = this.state.nodes.find((node) => node.id === edge.to);
     if (!from || !to) return;
+    const animation = this.state.animation;
     const isOptimal = this.state.highlightEdges.has(edge.id);
+    const isEvaluated = animation.evaluatedEdgeIds.has(edge.id);
+    const isSelectedCandidate = animation.selectedEdgeIds.has(edge.id);
+    const isCurrent = animation.currentEdgeId === edge.id;
     const isSelected = this.state.selectedEdgeId === edge.id;
-    const color = isOptimal ? "#ffad63" : isSelected ? "#70d8df" : "#7184a8";
-    const line = this.drawArrow(from, to, color, isOptimal ? 4 : isSelected ? 3 : 2);
+    const color = isOptimal ? "#ffad63" : isCurrent ? "#ffffff" : isSelectedCandidate ? "#70d8df" : isEvaluated ? "#a7d8ba" : isSelected ? "#70d8df" : "#7184a8";
+    const line = this.drawArrow(from, to, color, isOptimal ? 4 : isCurrent ? 4 : isEvaluated ? 3 : isSelected ? 3 : 2, animation.active && isCurrent);
     const midX = (line.start.x + line.end.x) / 2;
     const midY = (line.start.y + line.end.y) / 2;
     const ctx = this.ctx;
@@ -204,12 +214,17 @@ class CanvasRenderer {
     ctx.save();
     ctx.font = "600 12px Inter, system-ui, sans-serif";
     const width = ctx.measureText(label).width + 16;
-    ctx.fillStyle = isOptimal ? "#412d25" : "#19243a";
-    ctx.strokeStyle = isOptimal ? "#ffad63" : "#334363";
-    ctx.lineWidth = 1;
+    ctx.fillStyle = isOptimal ? "#412d25" : isCurrent ? "#355c46" : isEvaluated ? "#254d38" : "#19243a";
+    ctx.strokeStyle = isOptimal ? "#ffad63" : isCurrent ? "#ffffff" : isEvaluated ? "#a7d8ba" : "#334363";
+    ctx.lineWidth = isCurrent ? 2 : 1;
     ctx.beginPath(); ctx.roundRect(midX - width / 2, midY - 12, width, 24, 8); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = isOptimal ? "#ffd2a8" : "#c6d2e9";
+    ctx.fillStyle = isOptimal ? "#ffd2a8" : isCurrent ? "#ffffff" : isEvaluated ? "#d5f3df" : "#c6d2e9";
     ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(label, midX, midY + 1);
+    if (isCurrent && Number.isFinite(animation.currentCandidateValue)) {
+      ctx.font = "600 10px 'DM Mono', monospace";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(`= ${formatNumber(animation.currentCandidateValue)}`, midX, midY - 20);
+    }
     ctx.restore();
   }
 
@@ -218,14 +233,25 @@ class CanvasRenderer {
     const isStart = node.id === this.state.startId;
     const isEnd = node.id === this.state.endId;
     const isSelected = node.id === this.state.selectedNodeId;
+    const animation = this.state.animation;
+    const isCurrent = animation.currentNodeId === node.id;
+    const isCompleted = animation.completedNodeIds.has(node.id);
     ctx.save();
-    ctx.shadowColor = "rgba(0,0,0,.28)"; ctx.shadowBlur = 16; ctx.shadowOffsetY = 8;
-    ctx.beginPath(); ctx.arc(node.x, node.y, 25, 0, Math.PI * 2);
-    ctx.fillStyle = isStart ? "#1c9da5" : isEnd ? "#e97852" : "#283958"; ctx.fill();
-    ctx.shadowColor = "transparent"; ctx.lineWidth = isSelected ? 3 : 2; ctx.strokeStyle = isSelected ? "#f8fbff" : (isStart || isEnd) ? "#ffd3a9" : "#6d83aa"; ctx.stroke();
-    if (isStart || isEnd) { ctx.beginPath(); ctx.arc(node.x, node.y, 31, 0, Math.PI * 2); ctx.strokeStyle = isStart ? "rgba(112,216,223,.35)" : "rgba(255,173,99,.35)"; ctx.lineWidth = 2; ctx.stroke(); }
+    ctx.shadowColor = "rgba(0,0,0,.28)"; ctx.shadowBlur = isCurrent ? 24 : 16; ctx.shadowOffsetY = 8;
+    ctx.beginPath(); ctx.arc(node.x, node.y, isCurrent ? 29 : 25, 0, Math.PI * 2);
+    ctx.fillStyle = isCurrent ? "#238653" : isStart ? "#1c9da5" : isEnd ? "#e97852" : isCompleted ? "#245b42" : "#283958"; ctx.fill();
+    ctx.shadowColor = "transparent"; ctx.lineWidth = isCurrent ? 4 : isSelected ? 3 : 2; ctx.strokeStyle = isCurrent ? "#ffffff" : isSelected ? "#f8fbff" : (isStart || isEnd) ? "#ffd3a9" : isCompleted ? "#a7d8ba" : "#6d83aa"; ctx.stroke();
+    if (isStart || isEnd || isCurrent) { ctx.beginPath(); ctx.arc(node.x, node.y, isCurrent ? 36 : 31, 0, Math.PI * 2); ctx.strokeStyle = isCurrent ? "rgba(255,255,255,.55)" : isStart ? "rgba(112,216,223,.35)" : "rgba(255,173,99,.35)"; ctx.lineWidth = 2; ctx.stroke(); }
     ctx.fillStyle = "#ffffff"; ctx.font = "700 14px Inter, system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String(node.id), node.x, node.y + 1);
-    ctx.font = "700 10px Inter, system-ui, sans-serif"; ctx.fillStyle = isStart ? "#9cf0f1" : isEnd ? "#ffd0b1" : "#9eafd0"; ctx.fillText(isStart ? "ORIGINE" : isEnd ? "DEST." : "SOMMET", node.x, node.y + 42);
+    ctx.font = "700 10px Inter, system-ui, sans-serif"; ctx.fillStyle = isCurrent ? "#ffffff" : isStart ? "#9cf0f1" : isEnd ? "#ffd0b1" : isCompleted ? "#a7d8ba" : "#9eafd0"; ctx.fillText(isCurrent ? "EN COURS" : isStart ? "ORIGINE" : isEnd ? "DEST." : isCompleted ? "TRAITÉ" : "SOMMET", node.x, node.y + 42);
+    if (isCurrent && Number.isFinite(animation.currentValue)) {
+      ctx.font = "600 11px 'DM Mono', monospace";
+      const label = `V = ${formatNumber(animation.currentValue)}`;
+      const width = ctx.measureText(label).width + 16;
+      ctx.fillStyle = "#173d2b";
+      ctx.beginPath(); ctx.roundRect(node.x - width / 2, node.y - 51, width, 20, 6); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.fillText(label, node.x, node.y - 41);
+    }
     ctx.restore();
   }
 
@@ -249,7 +275,7 @@ class OptiGraphApp {
     this.example = this.body.dataset.example || "none";
     this.canvas = document.getElementById("canvas");
     this.container = document.getElementById("canvasContainer");
-    this.state = { nodes: [], edges: [], startId: null, endId: null, nextId: 1, nextEdgeId: 1, tool: "node", selectedNodeId: null, selectedEdgeId: null, dragging: null, linkPreview: null, highlightEdges: new Set(), result: null };
+    this.state = { nodes: [], edges: [], startId: null, endId: null, nextId: 1, nextEdgeId: 1, tool: "node", selectedNodeId: null, selectedEdgeId: null, dragging: null, linkPreview: null, highlightEdges: new Set(), result: null, animation: { active: false, stepIndex: -1, steps: [], currentNodeId: null, currentValue: null, evaluatedEdgeIds: new Set(), selectedEdgeIds: new Set(), completedNodeIds: new Set() } };
     this.history = [];
     this.future = [];
     this.renderer = new CanvasRenderer(this.canvas, this.state);
@@ -268,7 +294,7 @@ class OptiGraphApp {
     const value = JSON.parse(snapshot);
     this.state.nodes = value.nodes.map((node) => new GraphNode(node.id, node.x, node.y));
     this.state.edges = value.edges.map((edge) => new GraphEdge(edge.id, edge.from, edge.to, edge.weight));
-    this.state.startId = value.startId; this.state.endId = value.endId; this.state.nextId = value.nextId; this.state.nextEdgeId = value.nextEdgeId; this.state.result = null; this.state.highlightEdges.clear();
+    this.state.startId = value.startId; this.state.endId = value.endId; this.state.nextId = value.nextId; this.state.nextEdgeId = value.nextEdgeId; this.state.result = null; this.state.highlightEdges.clear(); this.resetAnimation();
     this.updateUI(); this.renderer.draw();
   }
 
@@ -288,8 +314,11 @@ class OptiGraphApp {
   bindUI() {
     document.querySelectorAll("[data-tool]").forEach((button) => button.addEventListener("click", () => this.setTool(button.dataset.tool)));
     document.getElementById("solveButton").addEventListener("click", () => this.solve());
-    document.getElementById("resetButton").addEventListener("click", () => { this.remember(); this.state.nodes = []; this.state.edges = []; this.state.startId = null; this.state.endId = null; this.state.nextId = 1; this.state.nextEdgeId = 1; this.state.result = null; this.state.highlightEdges.clear(); this.commit(); this.showToast("Le modèle a été réinitialisé."); });
+    document.getElementById("resetButton").addEventListener("click", () => { this.remember(); this.state.nodes = []; this.state.edges = []; this.state.startId = null; this.state.endId = null; this.state.nextId = 1; this.state.nextEdgeId = 1; this.state.result = null; this.state.highlightEdges.clear(); this.resetAnimation(); this.commit(); this.showToast("Le modèle a été réinitialisé."); });
+    document.getElementById("arrangeButton")?.addEventListener("click", () => this.autoArrange());
     document.getElementById("fitButton").addEventListener("click", () => this.centerGraph());
+    document.getElementById("pauseCalcButton")?.addEventListener("click", () => this.toggleAnimationPause());
+    document.getElementById("skipCalcButton")?.addEventListener("click", () => this.finishAnimation());
     document.getElementById("undoButton").addEventListener("click", () => this.undo());
     document.getElementById("redoButton").addEventListener("click", () => this.redo());
     document.getElementById("exportButton").addEventListener("click", () => this.exportModel());
@@ -316,7 +345,119 @@ class OptiGraphApp {
 
   askCost(defaultValue = 1) { return new Promise((resolve) => { const overlay = document.createElement("div"); overlay.className = "modal-overlay"; overlay.innerHTML = `<div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="costTitle"><div class="eyebrow">Paramètre de l’arc</div><h2 id="costTitle">Définir le poids</h2><p>Entrez une valeur numérique. Les valeurs négatives sont autorisées sur un graphe acyclique.</p><label class="modal-label" for="costInput">Poids de l’arc</label><input id="costInput" class="modal-input" type="number" step="any" value="${defaultValue}" /><div class="modal-actions"><button class="button button-ghost" data-cancel>Annuler</button><button class="button button-primary" data-confirm>Valider le poids</button></div></div>`; document.body.appendChild(overlay); const input = overlay.querySelector("#costInput"); input.focus(); input.select(); const close = (value) => { overlay.remove(); resolve(value); }; overlay.querySelector("[data-cancel]").addEventListener("click", () => close(null)); overlay.querySelector("[data-confirm]").addEventListener("click", () => { const value = Number(input.value); if (!Number.isFinite(value)) { input.classList.add("invalid"); input.focus(); } else close(value); }); input.addEventListener("keydown", (event) => { if (event.key === "Enter") overlay.querySelector("[data-confirm]").click(); if (event.key === "Escape") close(null); }); }); }
 
-  solve() { const result = new BellmanKalabaSolver(this.mode).solve(this.state.nodes, this.state.edges, this.state.startId, this.state.endId); if (!result.ok) { this.state.result = null; this.state.highlightEdges.clear(); this.updateResult(result); this.showToast(result.message, "error"); this.renderer.draw(); return; } this.state.result = result; this.state.highlightEdges.clear(); this.updateResult(result); this.setLiveStatus(result.multiple ? "Résolution terminée · optimums multiples" : "Résolution terminée · chemin optimal"); let index = 0; const edgeIds = [...result.optimalEdgeIds]; const timer = setInterval(() => { if (index >= edgeIds.length) { clearInterval(timer); return; } this.state.highlightEdges.add(edgeIds[index]); index += 1; this.renderer.draw(); }, 180); this.renderer.draw(); }
+  resetAnimation() {
+    if (this.animationTimer) clearTimeout(this.animationTimer);
+    this.animationTimer = null;
+    this.state.animation = { active: false, paused: false, stepIndex: -1, steps: [], currentNodeId: null, currentValue: null, currentEdgeId: null, currentCandidateValue: null, evaluatedEdgeIds: new Set(), selectedEdgeIds: new Set(), completedNodeIds: new Set() };
+    this.updateAnimationUI();
+  }
+
+  updateAnimationUI() {
+    const progress = document.getElementById("calcProgress");
+    if (!progress) return;
+    const animation = this.state.animation;
+    progress.classList.toggle("hidden", !animation.steps.length);
+    const total = animation.steps.length;
+    const current = Math.max(0, animation.stepIndex + 1);
+    const stepLabel = document.getElementById("calcStepLabel");
+    const stepKind = document.getElementById("calcStepKind");
+    const progressBar = document.getElementById("calcProgressBar");
+    const currentNode = document.getElementById("calcCurrentNode");
+    const formula = document.getElementById("calcCurrentFormula");
+    if (stepLabel) stepLabel.textContent = `Étape ${current} / ${total}`;
+    if (stepKind) stepKind.textContent = animation.active ? (animation.paused ? "En pause" : "Propagation en cours") : total ? "Calcul terminé" : "En attente";
+    if (progressBar) progressBar.style.width = `${total ? (current / total) * 100 : 0}%`;
+    if (currentNode) currentNode.textContent = animation.currentNodeId ? `Sommet ${animation.currentNodeId}` : "—";
+    const step = animation.steps[animation.stepIndex];
+    if (formula) {
+      if (!step) formula.textContent = "Prêt à démarrer";
+      else if (step.kind === "initialisation") formula.textContent = "V(destination) = 0";
+      else formula.textContent = `${this.mode === "min" ? "min" : "max"}(${(step.candidates || []).map((candidate) => `${candidate.weight} + V(${candidate.to}) = ${formatNumber(candidate.value)}`).join(" ; ")}) = ${formatNumber(step.value)}`;
+    }
+    const pauseButton = document.getElementById("pauseCalcButton");
+    if (pauseButton) pauseButton.textContent = animation.paused ? "Reprendre" : "Pause";
+  }
+
+  showAnimationStep(index) {
+    const animation = this.state.animation;
+    const step = animation.steps[index];
+    if (!step) return;
+    animation.stepIndex = index;
+    animation.currentNodeId = step.nodeId;
+    animation.currentValue = step.value;
+    const currentCandidate = (step.candidates || [])[0];
+    animation.currentEdgeId = currentCandidate?.edgeId ?? null;
+    animation.currentCandidateValue = currentCandidate?.value ?? null;
+    animation.evaluatedEdgeIds = new Set((step.candidates || []).map((candidate) => candidate.edgeId));
+    animation.selectedEdgeIds = new Set(step.selectedEdgeIds || []);
+    animation.completedNodeIds = new Set(animation.steps.slice(0, index).map((item) => item.nodeId));
+    this.updateAnimationUI();
+    this.renderer.draw();
+  }
+
+  finishAnimation() {
+    const animation = this.state.animation;
+    if (this.animationTimer) clearTimeout(this.animationTimer);
+    this.animationTimer = null;
+    animation.active = false;
+    animation.paused = false;
+    animation.stepIndex = animation.steps.length - 1;
+    animation.currentNodeId = null;
+    animation.currentValue = null;
+    animation.currentEdgeId = null;
+    animation.currentCandidateValue = null;
+    animation.evaluatedEdgeIds = new Set();
+    animation.selectedEdgeIds = new Set(this.state.result?.optimalEdgeIds || []);
+    animation.completedNodeIds = new Set(animation.steps.map((step) => step.nodeId));
+    this.state.highlightEdges = new Set(this.state.result?.optimalEdgeIds || []);
+    this.updateAnimationUI();
+    this.setLiveStatus(this.state.result?.multiple ? "Résolution terminée · optimums multiples" : "Résolution terminée · chemin optimal");
+    this.renderer.draw();
+  }
+
+  animateCalculation(result) {
+    this.resetAnimation();
+    const animation = this.state.animation;
+    animation.steps = result.steps || [];
+    animation.active = true;
+    animation.paused = false;
+    this.updateAnimationUI();
+    let index = 0;
+    const tick = () => {
+      if (!animation.active) return;
+      if (animation.paused) { this.animationTimer = setTimeout(tick, 120); return; }
+      if (index >= animation.steps.length) { this.finishAnimation(); return; }
+      this.showAnimationStep(index);
+      index += 1;
+      this.animationTimer = setTimeout(tick, 720);
+    };
+    tick();
+  }
+
+  toggleAnimationPause() {
+    if (!this.state.animation.active) return;
+    this.state.animation.paused = !this.state.animation.paused;
+    this.setLiveStatus(this.state.animation.paused ? "Animation en pause" : "Animation en cours");
+    this.updateAnimationUI();
+  }
+
+  solve() {
+    const result = new BellmanKalabaSolver(this.mode).solve(this.state.nodes, this.state.edges, this.state.startId, this.state.endId);
+    if (!result.ok) {
+      this.state.result = null;
+      this.resetAnimation();
+      this.state.highlightEdges.clear();
+      this.updateResult(result);
+      this.showToast(result.message, "error");
+      this.renderer.draw();
+      return;
+    }
+    this.state.result = result;
+    this.state.highlightEdges.clear();
+    this.updateResult(result);
+    this.setLiveStatus("Animation du calcul en cours");
+    this.animateCalculation(result);
+  }
 
   updateResult(result) { const empty = document.getElementById("resultEmpty"); const content = document.getElementById("resultContent"); const title = document.getElementById("resultTitle"); const badge = document.getElementById("resultBadge"); if (!result.ok) { empty.classList.remove("hidden"); content.classList.add("hidden"); title.textContent = "Calcul impossible"; badge.textContent = "À vérifier"; badge.className = "result-badge error"; return; } empty.classList.add("hidden"); content.classList.remove("hidden"); title.textContent = result.multiple ? "Plusieurs solutions optimales" : "Solution optimale identifiée"; badge.textContent = result.multiple ? "Égalité détectée" : "Calcul validé"; badge.className = `result-badge ${result.multiple ? "warning" : "success"}`; document.getElementById("resultCost").textContent = formatNumber(result.cost); document.getElementById("resultPath").textContent = result.paths[0].join(" → "); document.getElementById("resultIterations").textContent = result.iterations; document.getElementById("pathList").innerHTML = result.paths.map((path, index) => `<div class="path-row"><span>${String(index + 1).padStart(2, "0")}</span><strong>${path.join(" → ")}</strong><em>${formatNumber(result.cost)}</em></div>`).join(""); document.getElementById("valuesTable").innerHTML = [...result.values.entries()].map(([id, value]) => `<div class="value-row"><span>Sommet ${id}</span><strong>${Number.isFinite(value) ? formatNumber(value) : "∞"}</strong></div>`).join(""); }
 
@@ -328,9 +469,89 @@ class OptiGraphApp {
   undo() { if (!this.history.length) return; this.future.push(this.snapshot()); this.restore(this.history.pop()); this.commit(); this.showToast("Dernière action annulée."); }
   redo() { if (!this.future.length) return; this.history.push(this.snapshot()); this.restore(this.future.pop()); this.commit(); this.showToast("Action rétablie."); }
 
-  centerGraph() { if (!this.state.nodes.length) return; const xs = this.state.nodes.map((node) => node.x); const ys = this.state.nodes.map((node) => node.y); const minX = Math.min(...xs); const maxX = Math.max(...xs); const minY = Math.min(...ys); const maxY = Math.max(...ys); const scale = Math.min((this.renderer.width - 100) / Math.max(maxX - minX, 1), (this.renderer.height - 100) / Math.max(maxY - minY, 1), 1.15); const centerX = (minX + maxX) / 2; const centerY = (minY + maxY) / 2; this.remember(); this.state.nodes.forEach((node) => { node.x = this.renderer.width / 2 + (node.x - centerX) * scale; node.y = this.renderer.height / 2 + (node.y - centerY) * scale; }); this.commit(); this.showToast("Graphe recentré dans la zone de travail."); }
+  autoArrange() {
+    if (!this.state.nodes.length) return;
+    const indegree = new Map(this.state.nodes.map((node) => [node.id, 0]));
+    const adjacency = new Map(this.state.nodes.map((node) => [node.id, []]));
+    this.state.edges.forEach((edge) => {
+      if (adjacency.has(edge.from) && adjacency.has(edge.to)) {
+        adjacency.get(edge.from).push(edge.to);
+        indegree.set(edge.to, indegree.get(edge.to) + 1);
+      }
+    });
+    const queue = this.state.nodes.filter((node) => indegree.get(node.id) === 0).map((node) => node.id);
+    const topo = [];
+    while (queue.length) {
+      const current = queue.shift();
+      topo.push(current);
+      adjacency.get(current).forEach((next) => {
+        indegree.set(next, indegree.get(next) - 1);
+        if (indegree.get(next) === 0) queue.push(next);
+      });
+    }
+    const levels = new Map(this.state.nodes.map((node) => [node.id, 0]));
+    if (topo.length === this.state.nodes.length) {
+      topo.forEach((id) => adjacency.get(id).forEach((next) => levels.set(next, Math.max(levels.get(next), levels.get(id) + 1))));
+    } else {
+      this.state.nodes.forEach((node, index) => levels.set(node.id, Math.floor(index / Math.max(1, Math.ceil(Math.sqrt(this.state.nodes.length))))));
+      this.showToast("Cycle détecté : placement en grille effectué. Supprimez un arc du cycle pour résoudre.", "error");
+    }
+    const groups = new Map();
+    this.state.nodes.forEach((node) => { const level = levels.get(node.id); if (!groups.has(level)) groups.set(level, []); groups.get(level).push(node); });
+    const orderedLevels = [...groups.keys()].sort((a, b) => a - b);
+    const marginX = 70;
+    const marginY = 68;
+    const xGap = orderedLevels.length > 1 ? Math.max(95, (this.renderer.width - marginX * 2) / (orderedLevels.length - 1)) : 0;
+    this.remember();
+    orderedLevels.forEach((level, column) => {
+      const group = groups.get(level);
+      const yGap = group.length > 1 ? Math.min(125, (this.renderer.height - marginY * 2) / (group.length - 1)) : 0;
+      const totalHeight = yGap * (group.length - 1);
+      group.sort((a, b) => a.id - b.id).forEach((node, row) => {
+        node.x = Math.max(38, Math.min(this.renderer.width - 38, marginX + column * xGap));
+        node.y = Math.max(38, Math.min(this.renderer.height - 55, (this.renderer.height - totalHeight) / 2 + row * yGap));
+      });
+    });
+    this.commit();
+    if (topo.length === this.state.nodes.length) this.showToast("Sommets organisés automatiquement par niveaux.");
+  }
 
-  loadExample(kind) { const isMulti = kind === "multi"; const isMax = kind === "max"; const positions = isMulti ? [[90, 190], [250, 90], [430, 90], [250, 290], [430, 290], [650, 190]] : [[80, 190], [205, 90], [205, 290], [340, 190], [475, 90], [475, 290], [610, 190], [745, 90], [745, 290], [870, 190]]; const edges = isMulti ? [[1, 2, 5], [2, 3, 5], [3, 6, 5], [1, 4, 5], [4, 5, 5], [5, 6, 5], [2, 5, 8], [4, 3, 8]] : [[1, 2, 4], [1, 3, 2], [2, 4, 5], [3, 4, 3], [2, 5, 7], [4, 6, 4], [5, 6, 2], [4, 7, 6], [6, 7, 3], [6, 8, 5], [7, 9, 4], [8, 10, 4], [9, 10, 3]]; this.state.nodes = positions.map((position, index) => new GraphNode(index + 1, position[0], position[1])); this.state.edges = edges.map((edge, index) => new GraphEdge(index + 1, edge[0], edge[1], isMax && !isMulti ? edge[2] + (index % 3) : edge[2])); this.state.startId = 1; this.state.endId = isMulti ? 6 : 10; this.state.nextId = this.state.nodes.length + 1; this.state.nextEdgeId = this.state.edges.length + 1; this.state.result = null; this.state.highlightEdges.clear(); this.commit(); setTimeout(() => this.centerGraph(), 120); }
+  centerGraph() {
+    this.autoArrange();
+  }
+
+  loadExample(kind) {
+    const isMulti = kind === "multi";
+    const isComplex = kind === "complex";
+    const isMax = kind === "max";
+    const positions = isComplex
+      ? Array.from({ length: 18 }, (_, index) => [90 + (index % 6) * 130, 100 + Math.floor(index / 6) * 145])
+      : isMulti
+        ? [[90, 190], [250, 90], [430, 90], [250, 290], [430, 290], [650, 190]]
+        : [[80, 190], [205, 90], [205, 290], [340, 190], [475, 90], [475, 290], [610, 190], [745, 90], [745, 290], [870, 190]];
+    const edges = isComplex
+      ? [
+        [1, 2, 5], [1, 3, 4], [1, 4, 6],
+        [2, 5, 4], [2, 6, 3], [2, 7, 8], [3, 5, 5], [3, 6, 2], [3, 8, 5], [4, 6, 3], [4, 7, 4], [4, 8, 1],
+        [5, 9, 4], [5, 10, 6], [6, 9, 5], [6, 10, 3], [6, 11, 4], [7, 10, 2], [7, 11, 5], [7, 12, 3], [8, 11, 6], [8, 12, 2],
+        [9, 13, 4], [9, 14, 7], [10, 13, 2], [10, 14, 4], [10, 15, 6], [11, 14, 3], [11, 15, 2], [12, 14, 5], [12, 15, 4],
+        [13, 16, 3], [13, 17, 5], [14, 16, 4], [14, 17, 2], [15, 16, 6], [15, 17, 3], [16, 18, 5], [17, 18, 7]
+      ]
+      : isMulti
+        ? [[1, 2, 5], [2, 3, 5], [3, 6, 5], [1, 4, 5], [4, 5, 5], [5, 6, 5], [2, 5, 8], [4, 3, 8]]
+        : [[1, 2, 4], [1, 3, 2], [2, 4, 5], [3, 4, 3], [2, 5, 7], [4, 6, 4], [5, 6, 2], [4, 7, 6], [6, 7, 3], [6, 8, 5], [7, 9, 4], [8, 10, 4], [9, 10, 3]];
+    this.state.nodes = positions.map((position, index) => new GraphNode(index + 1, position[0], position[1]));
+    this.state.edges = edges.map((edge, index) => new GraphEdge(index + 1, edge[0], edge[1], isMax && !isMulti ? edge[2] + (index % 3) : edge[2]));
+    this.state.startId = 1;
+    this.state.endId = isComplex ? 18 : isMulti ? 6 : 10;
+    this.state.nextId = this.state.nodes.length + 1;
+    this.state.nextEdgeId = this.state.edges.length + 1;
+    this.state.result = null;
+    this.state.highlightEdges.clear();
+    this.resetAnimation();
+    this.commit();
+    setTimeout(() => this.autoArrange(), 120);
+  }
 
   exportModel() { const payload = { application: "OptiGraph Lab", version: 2, mode: this.mode, exportedAt: new Date().toISOString(), nodes: this.state.nodes, edges: this.state.edges, startId: this.state.startId, endId: this.state.endId }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = `optigraph-${this.mode}-${Date.now()}.json`; link.click(); URL.revokeObjectURL(url); this.showToast("Modèle exporté au format JSON."); }
 

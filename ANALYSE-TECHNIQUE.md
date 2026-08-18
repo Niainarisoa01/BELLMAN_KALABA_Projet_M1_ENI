@@ -39,3 +39,11 @@ Le cas `ExempleCheminsMultiples.html` est validé : 6 sommets, 8 arcs, valeur mi
 ## Ajustement d’identité visuelle
 
 La palette active a été convertie vers un système vert et blanc : forêt pour la navigation et les panneaux, vert moyen pour les actions et les chemins optimaux, menthe pour les accents, blanc et vert très pâle pour le landing. Le rendu navigateur du landing et du laboratoire confirme une cohérence visuelle générale et l’absence de toute marque générative visible dans les pages actives.
+
+## Réseau complexe et organisation automatique
+
+Un nouvel exemple `ExempleComplexe.html` contient 18 sommets et 39 arcs, organisés automatiquement en niveaux topologiques. Le solveur valide le modèle et retourne une valeur minimale de 19 avec le chemin `1 → 3 → 6 → 10 → 13 → 16 → 18`. L’interface expose maintenant le bouton **Organiser automatiquement**, qui répartit les sommets de gauche à droite selon leurs dépendances. En cas de cycle, une grille de secours est utilisée et l’utilisateur reçoit une instruction claire pour supprimer l’arc responsable avant de relancer la résolution.
+
+## Animation du calcul
+
+Le calcul animé est validé dans le navigateur sur le réseau complexe. Le panneau affiche l’étape courante (`Étape 2 / 18`), le sommet traité (`Sommet 17`), la formule `min(7 + V(18) = 7) = 7`, ainsi que les commandes **Pause** et **Afficher le résultat**. Le sommet actif est entouré et marqué `EN COURS`, tandis que les valeurs déjà traitées et les arcs évalués restent visibles.

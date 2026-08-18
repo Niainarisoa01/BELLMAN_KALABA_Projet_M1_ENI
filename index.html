@@ -1,67 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bellman-Kalaba - Accueil</title>
-    <link rel="stylesheet" href="css/responsive.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OptiGraph Lab — laboratoire interactif de recherche opérationnelle et de résolution de chemins optimaux." />
+  <title>OptiGraph Lab — Recherche opérationnelle</title>
+  <link rel="stylesheet" href="css/responsive.css" />
 </head>
+<body class="landing-page">
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="OptiGraph Lab, accueil">
+      <span class="brand-mark">OG</span>
+      <span><strong>OptiGraph</strong><small>LABORATOIRE RO</small></span>
+    </a>
+    <nav class="top-nav" aria-label="Navigation principale">
+      <a class="nav-link active" href="index.html">Accueil</a>
+      <a class="nav-link" href="MinBellman.html">Minimisation</a>
+      <a class="nav-link" href="MaxBellman.html">Maximisation</a>
+      <a class="nav-link" href="ExempleCheminsMultiples.html">Cas d’étude</a>
+    </nav>
+    <a class="button button-primary header-cta" href="MinBellman.html">Ouvrir le laboratoire</a>
+  </header>
 
-<body>
-
-    <header>
-        <div id="mDIV">
-            <div class="brand-title">BELLMAN-KALABA</div>
-            <div class="nav-buttons">
-                <a href="MinBellman.html" class="btn">Minimisation</a>
-                <a href="ExempleMin.html" class="btn">Exemple min</a>
-                <a href="MaxBellman.html" class="btn">Maximisation</a>
-                <a href="ExempleMax.html" class="btn">Exemple max</a>
-                <a href="ExempleCheminsMultiples.html" class="btn">Multi-Chemins</a>
-            </div>
+  <main>
+    <section class="hero container">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="status-dot"></span> Recherche opérationnelle · M1 ENI</div>
+        <h1>Modéliser. Résoudre.<br /><em>Comprendre.</em></h1>
+        <p class="hero-lead">Un environnement visuel pour construire des graphes orientés, exécuter Bellman-Kalaba et expliquer chaque décision du calcul.</p>
+        <div class="hero-actions">
+          <a class="button button-primary button-large" href="MinBellman.html">Commencer une résolution <span aria-hidden="true">→</span></a>
+          <a class="button button-ghost button-large" href="ExempleMin.html">Voir une démonstration</a>
         </div>
-    </header>
-
-    <div class="hero-section">
-        <h1>Projet Bellman-Kalaba</h1>
-        <p>Visualisation interactive de l'algorithme de Bellman-Kalaba pour la recherche de chemins optimaux dans un
-            graphe. Projet M1 ENI - 2025</p>
-    </div>
-
-    <div class="features-grid">
-        <div class="feature-card">
-            <h3>Minimisation</h3>
-            <p>Recherche du chemin de coût minimal (plus court chemin) dans un graphe valué.</p>
-            <div class="feature-actions">
-                <a href="MinBellman.html" class="btn">Mode Interactif</a>
-                <a href="ExempleMin.html" class="btn" style="background-color: #16a085;">Exemple</a>
-            </div>
+        <div class="hero-note"><span>●</span> Fonctionne localement, sans compte ni installation complexe</div>
+      </div>
+      <div class="hero-visual" aria-label="Aperçu d’un graphe optimisé">
+        <div class="visual-glow"></div>
+        <div class="graph-preview">
+          <svg viewBox="0 0 560 350" role="img" aria-label="Graphe orienté avec chemin optimal en orange">
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7184a8" /></marker>
+              <marker id="arrow-hot" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#ffae62" /></marker>
+            </defs>
+            <g class="preview-edge"><path d="M82 171 L188 86" marker-end="url(#arrow)"/><text x="128" y="116">4</text></g>
+            <g class="preview-edge hot"><path d="M82 179 L188 264" marker-end="url(#arrow-hot)"/><text x="128" y="242">2</text></g>
+            <g class="preview-edge"><path d="M212 88 L340 116" marker-end="url(#arrow)"/><text x="276" y="91">7</text></g>
+            <g class="preview-edge hot"><path d="M212 264 L340 234" marker-end="url(#arrow-hot)"/><text x="276" y="265">3</text></g>
+            <g class="preview-edge"><path d="M212 101 L340 226" marker-end="url(#arrow)"/><text x="282" y="159">6</text></g>
+            <g class="preview-edge hot"><path d="M370 232 L490 180" marker-end="url(#arrow-hot)"/><text x="430" y="194">5</text></g>
+            <g class="preview-edge"><path d="M370 120 L490 173" marker-end="url(#arrow)"/><text x="429" y="131">8</text></g>
+            <g class="preview-node start"><circle cx="62" cy="175" r="25"/><text x="62" y="180">S</text></g>
+            <g class="preview-node"><circle cx="200" cy="75" r="25"/><text x="200" y="80">2</text></g>
+            <g class="preview-node"><circle cx="200" cy="275" r="25"/><text x="200" y="280">3</text></g>
+            <g class="preview-node"><circle cx="350" cy="115" r="25"/><text x="350" y="120">4</text></g>
+            <g class="preview-node"><circle cx="350" cy="235" r="25"/><text x="350" y="240">5</text></g>
+            <g class="preview-node end"><circle cx="510" cy="175" r="25"/><text x="510" y="180">T</text></g>
+          </svg>
+          <div class="preview-label"><span class="legend-line"></span> Chemin optimal mis en évidence</div>
         </div>
+      </div>
+    </section>
 
-        <div class="feature-card">
-            <h3>Maximisation</h3>
-            <p>Recherche du chemin de coût maximal (plus long chemin) dans un graphe valué.</p>
-            <div class="feature-actions">
-                <a href="MaxBellman.html" class="btn">Mode Interactif</a>
-                <a href="ExempleMax.html" class="btn" style="background-color: #16a085;">Exemple</a>
-            </div>
-        </div>
+    <section class="metrics container" aria-label="Indicateurs de l’application">
+      <div class="metric"><strong>2</strong><span>objectifs d’optimisation</span></div>
+      <div class="metric"><strong>∞</strong><span>graphes à explorer</span></div>
+      <div class="metric"><strong>100%</strong><span>calcul expliqué visuellement</span></div>
+      <div class="metric"><strong>0</strong><span>installation requise</span></div>
+    </section>
 
-        <div class="feature-card">
-            <h3>Cas Spéciaux</h3>
-            <p>Exploration de cas particuliers comme les chemins critiques multiples de même valeur.</p>
-            <div class="feature-actions">
-                <a href="ExempleCheminsMultiples.html" class="btn" style="background-color: #e67e22;">Multi-Chemins</a>
-            </div>
-        </div>
-    </div>
+    <section class="section container">
+      <div class="section-heading"><div><div class="eyebrow">Un espace de travail complet</div><h2>De la modélisation à la décision</h2></div><p>Chaque outil est conçu pour rendre la théorie exploitable : une interface claire, des états explicites et un résultat que l’on peut justifier.</p></div>
+      <div class="feature-grid">
+        <article class="feature-card accent-cyan"><span class="feature-number">01</span><h3>Construire un graphe</h3><p>Ajoutez sommets et arcs directement sur le canevas. Déplacez, modifiez ou supprimez les éléments avec des contrôles dédiés.</p><a href="MinBellman.html">Créer un modèle <span>→</span></a></article>
+        <article class="feature-card accent-orange"><span class="feature-number">02</span><h3>Choisir l’objectif</h3><p>Comparez la minimisation du coût total et la maximisation du chemin critique dans un même environnement pédagogique.</p><a href="MaxBellman.html">Explorer la maximisation <span>→</span></a></article>
+        <article class="feature-card accent-violet"><span class="feature-number">03</span><h3>Analyser le résultat</h3><p>Visualisez le chemin optimal, les égalités, les valeurs de Bellman et les étapes successives de la propagation.</p><a href="ExempleCheminsMultiples.html">Voir un cas multiple <span>→</span></a></article>
+      </div>
+    </section>
 
-    <footer style="text-align: center; padding: 2rem; color: #95a5a6; margin-top: auto;">
-        <p>&copy; 2025 Niaina Nomenjanahary - Projet Bellman-Kalaba</p>
-    </footer>
+    <section class="method-section">
+      <div class="container method-layout"><div><div class="eyebrow">Méthode</div><h2>Une lecture pédagogique de Bellman-Kalaba</h2><p>Le laboratoire travaille sur des graphes orientés acycliques, particulièrement adaptés à l’étude des projets, réseaux logistiques et chemins critiques. Le calcul progresse depuis le sommet destination et conserve la meilleure valeur connue pour chaque prédécesseur.</p></div><div class="method-steps"><div><b>1</b><span>Formaliser<br /><small>Graphe, coûts, origine et destination</small></span></div><div><b>2</b><span>Propager<br /><small>Valeurs de Bellman et prédécesseurs</small></span></div><div><b>3</b><span>Décider<br /><small>Chemin(s) optimal(aux) et justification</small></span></div></div></div>
+    </section>
+  </main>
 
+  <footer class="site-footer container"><span>© 2025–2026 OptiGraph Lab · Projet M1 ENI</span><span>Recherche opérationnelle, rendue lisible.</span></footer>
 </body>
-
 </html>

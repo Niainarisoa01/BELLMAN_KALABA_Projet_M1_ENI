@@ -1,70 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bellman-Kalaba - Exemple Chemins Multiples</title>
-    <link rel="stylesheet" href="css/responsive.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Laboratoire OptiGraph — résolution de chemin de coût minimal par Bellman-Kalaba." />
+  <title>OptiGraph Lab — Cas d’étude multi-chemins</title>
+  <link rel="stylesheet" href="css/responsive.css" />
 </head>
-
-<body>
-    <header>
-        <div id="mDIV">
-            <a href="index.html" class="brand-title">BELLMAN-KALABA</a>
-            <div class="nav-buttons">
-                <a href="MinBellman.html" class="btn">Minimisation</a>
-                <a href="ExempleMin.html" class="btn">Exemple min</a>
-                <a href="MaxBellman.html" class="btn">Maximisation</a>
-                <a href="ExempleMax.html" class="btn">Exemple max</a>
-                <a href="ExempleCheminsMultiples.html" class="btn active">Multi-Chemins</a>
-            </div>
-        </div>
-    </header>
-    <div class="main-container">
-        <div class="sidebar">
-            <h3>Contrôles</h3>
-            <button id="btn1" class="btn active">Ajouter un sommet</button>
-            <button id="btn8" class="btn">Ajouter un lien</button>
-            <button id="btn2" class="btn">Positionner un sommet</button>
-            <button id="btn3" class="btn">Mettre à jour</button>
-            <button id="btn4" class="btn">Supprimer</button>
-            <button id="btn5" class="btn">Choisir Debut</button>
-            <button id="btn6" class="btn">Choisir Fin</button>
-            <button id="btn7" class="btn" style="background-color: #e67e22; margin-top: auto;">Chercher</button>
-        </div>
-        <div class="canvas-container" id="canvasContainer">
-            <canvas id="canvas"></canvas>
-        </div>
-    </div>
-    <script type="module">
-        import { initializeBellmanApp } from './src/main.js';
-
-        // Simple button active state logic
-        document.querySelectorAll('.sidebar .btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('.sidebar .btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        initializeBellmanApp({
-            isMin: true,
-            loadExample: true,
-            exampleType: 'multi',
-            buttonIds: {
-                item: "btn1",
-                drag: "btn2",
-                update: "btn3",
-                delete: "btn4",
-                debut: "btn5",
-                fin: "btn6",
-                chercher: "btn7",
-                link: "btn8"
-            }
-        });
-    </script>
+<body class="workspace-page" data-mode="min" data-example="multi">
+  <header class="site-header workspace-header">
+    <a class="brand" href="index.html" aria-label="OptiGraph Lab, accueil"><span class="brand-mark">OG</span><span><strong>OptiGraph</strong><small>LABORATOIRE RO</small></span></a>
+    <div class="workspace-title"><span class="mode-pill min-pill">MIN</span><span>Chemin de coût minimal</span></div>
+    <nav class="top-nav" aria-label="Navigation principale"><a class="nav-link" href="index.html">Accueil</a><a class="nav-link active" href="MinBellman.html">Minimisation</a><a class="nav-link" href="MaxBellman.html">Maximisation</a></nav>
+  </header>
+  <main class="workspace-layout">
+    <aside class="control-panel" aria-label="Panneau de contrôle">
+      <div class="panel-intro"><div class="eyebrow">Éditeur de modèle</div><h1>Construisez votre réseau</h1><p>Créez un graphe orienté acyclique, puis sélectionnez une origine et une destination.</p></div>
+      <div class="tool-section"><div class="tool-section-title">Édition</div><div class="tool-grid"><button class="tool-button active" data-tool="node"><span class="tool-key">N</span><span><b>Ajouter un sommet</b><small>Cliquez sur le canevas</small></span></button><button class="tool-button" data-tool="edge"><span class="tool-key">L</span><span><b>Ajouter un arc</b><small>Glissez d’un sommet à l’autre</small></span></button><button class="tool-button" data-tool="move"><span class="tool-key">M</span><span><b>Déplacer</b><small>Réorganisez le modèle</small></span></button><button class="tool-button" data-tool="edit"><span class="tool-key">E</span><span><b>Modifier un coût</b><small>Double-cliquez sur un arc</small></span></button><button class="tool-button" data-tool="delete"><span class="tool-key">D</span><span><b>Supprimer</b><small>Élément ou sélection</small></span></button></div></div>
+      <div class="tool-section"><div class="tool-section-title">Paramètres</div><div class="endpoint-grid"><button class="endpoint-button" data-tool="start"><span class="endpoint-icon start-icon">S</span><span><b>Origine</b><small id="startStatus">Non définie</small></span></button><button class="endpoint-button" data-tool="end"><span class="endpoint-icon end-icon">T</span><span><b>Destination</b><small id="endStatus">Non définie</small></span></button></div></div>
+      <div class="panel-footer"><button id="solveButton" class="button button-primary solve-button"><span>Exécuter Bellman-Kalaba</span><span aria-hidden="true">→</span></button><button id="resetButton" class="text-button">Réinitialiser le modèle</button></div>
+    </aside>
+    <section class="workspace-main">
+      <div class="workspace-toolbar"><div class="toolbar-left"><span class="live-indicator"><i></i> Prêt à modéliser</span><span class="toolbar-separator"></span><span id="graphStats">0 sommet · 0 arc</span></div><div class="toolbar-right"><button id="fitButton" class="toolbar-button">Centrer le graphe</button><button id="undoButton" class="toolbar-button" disabled>Annuler</button><button id="redoButton" class="toolbar-button" disabled>Rétablir</button><button id="exportButton" class="toolbar-button">Exporter</button><label class="toolbar-button file-button">Importer<input id="importInput" type="file" accept="application/json" /></label></div></div>
+      <div id="canvasContainer" class="canvas-container"><canvas id="canvas" aria-label="Zone de dessin du graphe"></canvas><div id="canvasHint" class="canvas-hint"><div class="hint-icon">+</div><strong>Votre espace de modélisation</strong><span>Activez « Ajouter un sommet », puis cliquez ici pour commencer.</span></div><div id="toastRegion" class="toast-region" aria-live="polite"></div></div>
+      <section class="results-panel" aria-live="polite"><div class="results-header"><div><div class="eyebrow">Analyse de la résolution</div><h2 id="resultTitle">Aucun calcul exécuté</h2></div><div id="resultBadge" class="result-badge neutral">En attente</div></div><div id="resultEmpty" class="result-empty"><p>Définissez une origine, une destination et au moins un chemin. Le résultat détaillé apparaîtra ici.</p></div><div id="resultContent" class="result-content hidden"><div class="result-summary"><div class="summary-card"><small>Valeur optimale</small><strong id="resultCost">—</strong><span>coût total</span></div><div class="summary-card"><small>Chemin principal</small><strong id="resultPath">—</strong><span>ordre des sommets</span></div><div class="summary-card"><small>Itérations</small><strong id="resultIterations">—</strong><span>étapes de propagation</span></div></div><div class="result-columns"><div><h3>Chemin(s) optimal(aux)</h3><div id="pathList" class="path-list"></div></div><div><h3>Valeurs de Bellman</h3><div id="valuesTable" class="values-table"></div></div></div></div></section>
+    </section>
+  </main>
+  <script type="module" src="./src/main.js"></script>
 </body>
-
 </html>
